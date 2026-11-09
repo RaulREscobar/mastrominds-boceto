@@ -106,6 +106,77 @@
       animation: textShimmer 6s linear infinite;
     }
 
+    /* ================= RAYCAST-STYLE CINEMATIC REVEAL & SHOWCASE ================= */
+    .raycast-text-reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      filter: blur(4px);
+      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), 
+                  transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), 
+                  filter 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform, filter;
+    }
+    .raycast-text-reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0px);
+    }
+
+    /* Raycast Ambient Background Bloom (lighting up after text arrives) */
+    .raycast-ambient-bloom {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.65);
+      width: 820px;
+      height: 540px;
+      border-radius: 9999px;
+      background: radial-gradient(ellipse at center, rgba(250, 180, 18, 0.32) 0%, rgba(250, 103, 17, 0.16) 42%, rgba(16, 185, 129, 0.08) 65%, transparent 80%);
+      filter: blur(85px);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 5;
+    }
+    .raycast-ambient-bloom.active {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.15);
+    }
+
+    /* Raycast Segmented Tabs */
+    .raycast-tab-btn {
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .raycast-tab-btn.active {
+      background: rgba(15, 23, 42, 0.95);
+      border-color: rgba(250, 180, 18, 0.65) !important;
+      color: #FFF !important;
+      box-shadow: 0 0 25px -4px rgba(250, 180, 18, 0.35);
+    }
+    .raycast-progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #FAB412, #FA6711);
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* Raycast Content Panels (Transitions) */
+    .raycast-panel {
+      display: none;
+      opacity: 0;
+      transform: translateY(18px) scale(0.985);
+      transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .raycast-panel.active {
+      display: grid;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
     /* Shockwave pulse on explosion */
     @keyframes shockwave {
       0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
@@ -316,6 +387,9 @@
   <!-- ================= HERO EXPLOSION STAGE ================= -->
   <section id="hero-stage" class="relative min-h-[740px] md:min-h-[850px] flex flex-col items-center justify-center px-4 overflow-hidden bg-gradient-to-b from-[#080C18] via-[#05070E] to-[#05070E] cyber-grid z-10 w-full text-center">
     
+    <!-- Raycast Ambient Color Bloom behind text -->
+    <div id="raycast-bloom" class="raycast-ambient-bloom"></div>
+
     <!-- Shockwave Flash Ring -->
     <div id="shockwave" class="shockwave-ring"></div>
 
@@ -394,41 +468,39 @@
       <div class="text-xs font-bold text-slate-200 mt-1">$847,000+ <span class="text-[10px] font-normal text-slate-400">gestionados con éxito</span></div>
     </div>
 
-    <!-- ================= CENTRAL HERO TEXT CONTENT ================= -->
+    <!-- ================= CENTRAL HERO TEXT CONTENT (CON ENTRADA ASCENDENTE RAYCAST) ================= -->
     <div class="w-full max-w-3xl mx-auto text-center relative z-20 py-10 flex flex-col items-center justify-center">
       
       <!-- Antetítulo badge dinámico -->
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-amber-500/30 text-amber-400 text-xs font-semibold mb-6 shadow-xl shadow-amber-500/10 transition-all">
+      <div id="hero-badge-wrap" class="raycast-text-reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-amber-500/30 text-amber-400 text-xs font-semibold mb-6 shadow-xl shadow-amber-500/10">
         <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
         <span id="hero-badge-text">Para marcas europeas que entran a Amazon EE. UU.</span>
       </div>
 
-      <!-- H1 Headline dinámico con Shimmer animado -->
-      <h1 id="hero-h1" class="text-3xl sm:text-5xl md:text-6xl font-black font-display tracking-tight text-white mb-6 leading-[1.12] transition-all">
-        Lleva tu marca europea a Amazon EE. UU.,<br>
-        <span class="shimmer-text">
-          sin ir a ciegas ni quemar margen.
-        </span>
+      <!-- H1 Headline dinámico con Shimmer animado y reveal por líneas -->
+      <h1 class="text-3xl sm:text-5xl md:text-6xl font-black font-display tracking-tight text-white mb-6 leading-[1.12]">
+        <span id="hero-h1-1" class="raycast-text-reveal block">Lleva tu marca europea a Amazon EE. UU.,</span>
+        <span id="hero-h1-2" class="raycast-text-reveal block shimmer-text">sin ir a ciegas ni quemar margen.</span>
       </h1>
 
       <!-- Párrafo descriptivo dinámico -->
-      <p id="hero-p" class="text-sm md:text-base text-slate-300 max-w-xl mx-auto mb-8 font-normal leading-relaxed transition-all">
+      <p id="hero-p" class="raycast-text-reveal text-sm md:text-base text-slate-300 max-w-xl mx-auto mb-8 font-normal leading-relaxed">
         Desde el lanzamiento y la fiscalidad hasta el beneficio neto por SKU: gestionamos tus listings, publicidad PPC y logística FBA en el mayor mercado de Amazon con tecnología propia.
       </p>
 
       <!-- Botones de Acción -->
-      <div class="flex flex-wrap items-center justify-center gap-3.5 mb-10">
+      <div id="hero-actions" class="raycast-text-reveal flex flex-wrap items-center justify-center gap-3.5 mb-10">
         <a href="#audit-tool" id="hero-cta-btn" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#FAB412] to-[#FA6711] text-black font-extrabold text-sm shadow-xl shadow-amber-500/25 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
           <span>Obtén tu auditoría gratis 3-en-1</span>
           <span>→</span>
         </a>
-        <a href="#metodo-steps" class="px-7 py-3.5 rounded-xl bg-slate-900/80 text-white font-semibold text-sm border border-slate-700 hover:border-amber-400 hover:bg-slate-800 transition-all">
-          Explorar el Método Paso a Paso ↓
+        <a href="#raycast-showcase" class="px-7 py-3.5 rounded-xl bg-slate-900/80 text-white font-semibold text-sm border border-slate-700 hover:border-amber-400 hover:bg-slate-800 transition-all">
+          Explorar el Método Raycast ↓
         </a>
       </div>
 
       <!-- Live Counters Ticker -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 rounded-2xl bg-black/60 border border-slate-800/90 backdrop-blur-md max-w-2xl mx-auto">
+      <div id="hero-ticker" class="raycast-text-reveal grid grid-cols-2 md:grid-cols-4 gap-3 p-4 rounded-2xl bg-black/60 border border-slate-800/90 backdrop-blur-md max-w-2xl mx-auto w-full">
         <div class="p-2 border-r border-slate-800/80 text-center">
           <div class="text-2xl md:text-3xl font-black font-tech text-amber-400">34%</div>
           <div class="text-[11px] text-slate-400 mt-0.5 font-medium">Reducción TACoS</div>
@@ -450,7 +522,7 @@
     </div>
 
     <!-- Flecha de Scroll Dinámica -->
-    <a href="#metodo-steps" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-xs text-slate-400 hover:text-amber-400 transition-colors z-20">
+    <a href="#raycast-showcase" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-xs text-slate-400 hover:text-amber-400 transition-colors z-20">
       <span class="text-[10px] font-mono tracking-widest uppercase font-semibold">Descubre el método</span>
       <div class="w-8 h-8 rounded-full border border-slate-700 bg-slate-900/80 flex items-center justify-center animate-bounce-down text-amber-400">
         ↓
@@ -529,6 +601,339 @@
 
       </div>
     </div>
+  </section>
+
+
+  <!-- ================= RAYCAST-STYLE INTERACTIVE STAGE & CAROUSEL ================= -->
+  <section id="raycast-showcase" class="py-20 px-4 md:px-8 max-w-7xl mx-auto relative z-20">
+    
+    <!-- Section Header estilo Raycast -->
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-mono font-bold mb-3 shadow-lg shadow-amber-500/10">
+        <span>⚡</span> SHOWCASE INTERACTIVO · EL MOTOR IBERNOVA™
+      </div>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-black font-display text-white tracking-tight mb-4">
+        Haz clic en cada fase y comprueba los resultados.
+      </h2>
+      <p class="text-sm md:text-base text-slate-300">
+        Carrusel reactivo estilo Raycast con software real, capturas verificadas de Seller Central y el protocolo de rentabilidad neta.
+      </p>
+    </div>
+
+    <!-- RAYCAST SEGMENTED TABS (BARRA HORIZONTAL SUPERIOR CON PROGRESS BAR) -->
+    <div class="max-w-5xl mx-auto mb-8">
+      <div id="raycast-tabs-nav" class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 p-2 rounded-2xl bg-[#090D18]/90 border border-slate-800 backdrop-blur-xl shadow-2xl">
+        
+        <!-- Tab 1 -->
+        <button id="rtab-1" onclick="switchRaycastTab(1)" class="raycast-tab-btn active p-3 sm:p-4 rounded-xl border border-transparent text-left transition-all relative overflow-hidden group">
+          <div class="flex items-center justify-between font-mono text-[10px] text-amber-400 font-bold uppercase mb-1">
+            <span>📦 FASE 01</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">Semanas 1-2</span>
+          </div>
+          <div class="font-bold text-white text-xs sm:text-sm tracking-tight group-hover:text-amber-400 transition-colors">Desembarco & Aduanas</div>
+          <div class="text-[10px] text-slate-400 mt-0.5 hidden sm:block">W-8BEN-E + Importer of Record</div>
+          <div id="rprog-1" class="raycast-progress-bar"></div>
+        </button>
+
+        <!-- Tab 2 -->
+        <button id="rtab-2" onclick="switchRaycastTab(2)" class="raycast-tab-btn p-3 sm:p-4 rounded-xl border border-transparent text-left transition-all relative overflow-hidden group text-slate-400 hover:text-white">
+          <div class="flex items-center justify-between font-mono text-[10px] text-emerald-400 font-bold uppercase mb-1">
+            <span>⚡ FASE 02</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">AdTech Ibernova</span>
+          </div>
+          <div class="font-bold text-white text-xs sm:text-sm tracking-tight group-hover:text-emerald-400 transition-colors">Algoritmo PPC & ACoS</div>
+          <div class="text-[10px] text-slate-400 mt-0.5 hidden sm:block">Pujas en tiempo real: 8.02% ACoS</div>
+          <div id="rprog-2" class="raycast-progress-bar"></div>
+        </button>
+
+        <!-- Tab 3 -->
+        <button id="rtab-3" onclick="switchRaycastTab(3)" class="raycast-tab-btn p-3 sm:p-4 rounded-xl border border-transparent text-left transition-all relative overflow-hidden group text-slate-400 hover:text-white">
+          <div class="flex items-center justify-between font-mono text-[10px] text-blue-400 font-bold uppercase mb-1">
+            <span>🎨 FASE 03</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300">Psicología US</span>
+          </div>
+          <div class="font-bold text-white text-xs sm:text-sm tracking-tight group-hover:text-blue-400 transition-colors">Conversión A+ Premium</div>
+          <div class="text-[10px] text-slate-400 mt-0.5 hidden sm:block">Ratio duplicado: 9.2% ➔ 21.4%</div>
+          <div id="rprog-3" class="raycast-progress-bar"></div>
+        </button>
+
+        <!-- Tab 4 -->
+        <button id="rtab-4" onclick="switchRaycastTab(4)" class="raycast-tab-btn p-3 sm:p-4 rounded-xl border border-transparent text-left transition-all relative overflow-hidden group text-slate-400 hover:text-white">
+          <div class="flex items-center justify-between font-mono text-[10px] text-purple-400 font-bold uppercase mb-1">
+            <span>💰 FASE 04</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300">P&L Real</span>
+          </div>
+          <div class="font-bold text-white text-xs sm:text-sm tracking-tight group-hover:text-purple-400 transition-colors">Margen Limpio por SKU</div>
+          <div class="text-[10px] text-slate-400 mt-0.5 hidden sm:block">+$42,390 neto / mes por producto</div>
+          <div id="rprog-4" class="raycast-progress-bar"></div>
+        </button>
+
+      </div>
+
+      <!-- Controls row (Auto Play toggle + Step Indicator + Arrows) -->
+      <div class="flex items-center justify-between px-2 pt-2 text-xs text-slate-400">
+        <div class="flex items-center gap-3">
+          <button id="btn-raycast-pause" onclick="toggleRaycastAutoPlay()" class="px-3 py-1 rounded-lg bg-black/60 border border-slate-800 text-amber-400 font-mono text-[11px] flex items-center gap-1.5 hover:border-slate-700 transition-all">
+            <span id="raycast-play-icon">⏸</span>
+            <span id="raycast-play-label">Auto-rotación (6s)</span>
+          </button>
+          <span class="text-[11px] text-slate-500 hidden sm:inline">Pasa el ratón para pausar</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="raycast-step-counter" class="font-mono text-slate-400 text-xs font-bold">1 / 4</span>
+          <div class="flex items-center gap-1">
+            <button onclick="prevRaycastTab()" title="Fase anterior" class="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-400 text-slate-300 hover:text-white flex items-center justify-center font-bold text-xs transition-colors">
+              ←
+            </button>
+            <button onclick="nextRaycastTab()" title="Siguiente fase" class="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-400 text-slate-300 hover:text-white flex items-center justify-center font-bold text-xs transition-colors">
+              →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- RAYCAST DISPLAY STAGE (EL CANVAS QUE CAMBIA SUAVEMENTE) -->
+    <div id="raycast-stage-container" class="rounded-3xl bg-[#080C18]/95 border border-slate-800/90 shadow-2xl overflow-hidden relative backdrop-blur-xl">
+      
+      <!-- macOS Window Chrome Header -->
+      <div class="px-5 py-3 bg-[#05070E] border-b border-slate-800/90 flex items-center justify-between text-xs">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-[#FF5F56] inline-block shadow-sm shadow-red-500/30"></span>
+          <span class="w-3 h-3 rounded-full bg-[#FFBD2E] inline-block shadow-sm shadow-yellow-500/30"></span>
+          <span class="w-3 h-3 rounded-full bg-[#27C93F] inline-block shadow-sm shadow-green-500/30"></span>
+          <span id="raycast-window-title" class="font-mono text-[11px] text-slate-400 ml-3 font-semibold tracking-wide">
+            ibernova://growth-engine/phase-01-aduanas-fba
+          </span>
+        </div>
+        <div class="flex items-center gap-2 font-mono text-[11px]">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span class="text-emerald-400 font-bold">IBERNOVA CORE ACTIVE</span>
+        </div>
+      </div>
+
+      <!-- STAGE CONTENT VIEWPORTS -->
+      <div class="p-6 sm:p-8 md:p-12 min-h-[460px] flex items-center">
+        
+        <!-- PANEL 1: DESEMBARCO & ADUANAS -->
+        <div id="rpanel-1" class="raycast-panel active w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div class="lg:col-span-6 space-y-4 text-left">
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 font-mono text-xs font-bold">
+                FASE 01 · SEMANAS 1 A 2
+              </span>
+              <span class="text-xs text-slate-400">Protección Legal & Fiscal</span>
+            </div>
+            <h3 class="text-2xl sm:text-3xl font-black font-display text-white tracking-tight">
+              Cimientos Fiscales, Aduanas e Importer of Record
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+              Amazon EE. UU. rechaza el 41% de envíos internacionales por discrepancias de aduanas. Tramitamos tu formulario <strong class="text-white">W-8BEN-E</strong> para evitar la retención del 30% del IRS y asignamos <strong class="text-white">Customs Bond continuo con Importer of Record</strong> para entrega directa en almacenes FBA.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+              <div class="p-3 rounded-xl bg-black/60 border border-slate-800 text-xs">
+                <div class="text-emerald-400 font-bold font-mono">✓ Retención 0% IRS</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">W-8BEN-E blindado ante el fisco</div>
+              </div>
+              <div class="p-3 rounded-xl bg-black/60 border border-slate-800 text-xs">
+                <div class="text-blue-400 font-bold font-mono">✓ Customs Bond Aprobado</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">Entrada sin retención CBP en puerto</div>
+              </div>
+            </div>
+            <div class="pt-2 flex items-center gap-3">
+              <a href="#audit-tool" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#FAB412] to-[#FA6711] text-black font-extrabold text-xs shadow-lg shadow-amber-500/25 hover:scale-105 transition-all">
+                Auditar mi Viabilidad en EE. UU. ➔
+              </a>
+              <span class="text-[11px] text-slate-400 font-mono">Tiempo de setup: 14 días</span>
+            </div>
+          </div>
+
+          <!-- Visual Canvas Panel 1 -->
+          <div class="lg:col-span-6">
+            <div class="p-6 rounded-2xl bg-black/80 border border-slate-800 font-mono text-xs shadow-2xl relative overflow-hidden">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-800 text-slate-400 text-[11px]">
+                <span class="text-amber-400 font-bold">> TERMINAL DE DESEMBARCO ADUANERO</span>
+                <span class="text-emerald-400">STATUS: READY 🟢</span>
+              </div>
+              <div class="space-y-2.5 py-4 text-[11px]">
+                <div class="flex items-start gap-2 text-slate-300">
+                  <span class="text-emerald-400 font-bold">[OK]</span>
+                  <span>IRS Form W-8BEN-E: Validado (Retención 30% excluida)</span>
+                </div>
+                <div class="flex items-start gap-2 text-slate-300">
+                  <span class="text-emerald-400 font-bold">[OK]</span>
+                  <span>Importer of Record (IOR): CBP Bond Activo #MM-99201</span>
+                </div>
+                <div class="flex items-start gap-2 text-slate-300">
+                  <span class="text-emerald-400 font-bold">[OK]</span>
+                  <span>FBA Inbound Center: AVP1 (Hazle Township, PA) - Asignado</span>
+                </div>
+                <div class="flex items-start gap-2 text-slate-300">
+                  <span class="text-emerald-400 font-bold">[OK]</span>
+                  <span>Marketplace Facilitator: Sales Tax liquidado en origen por Amazon</span>
+                </div>
+              </div>
+              <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between text-xs">
+                <span class="text-white font-bold font-sans">Despacho Aduanero Continuo</span>
+                <span class="text-emerald-400 font-bold">0 días de retención</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 2: ADTECH IBERNOVA -->
+        <div id="rpanel-2" class="raycast-panel w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div class="lg:col-span-6 space-y-4 text-left">
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-mono text-xs font-bold">
+                FASE 02 · MOTOR IBERNOVA™
+              </span>
+              <span class="text-xs text-slate-400">Algoritmo PPC en Tiempo Real</span>
+            </div>
+            <h3 class="text-2xl sm:text-3xl font-black font-display text-white tracking-tight">
+              Optimización PPC Algorítmica con ACoS 8.02%
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+              Ibernova monitoriza cada puja cada 15 minutos. Detecta keywords caníbales y ajusta el bid según la probabilidad de compra en tiempo real. Reducimos el ACoS a un tercio y bajamos el TACoS total un <strong class="text-emerald-400 font-semibold">34%</strong>.
+            </p>
+            <div class="grid grid-cols-3 gap-2.5 pt-2 text-center">
+              <div class="p-3 rounded-xl bg-black/60 border border-slate-800">
+                <div class="text-xl sm:text-2xl font-black font-tech text-emerald-400">8.02%</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">ACoS Auditado</div>
+              </div>
+              <div class="p-3 rounded-xl bg-black/60 border border-slate-800">
+                <div class="text-xl sm:text-2xl font-black font-tech text-amber-400">-34%</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">TACoS Total</div>
+              </div>
+              <div class="p-3 rounded-xl bg-black/60 border border-slate-800">
+                <div class="text-xl sm:text-2xl font-black font-tech text-white">142</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Keywords Cortadas</div>
+              </div>
+            </div>
+            <div class="pt-2 flex items-center gap-3">
+              <a href="#audit-tool" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#FAB412] to-[#FA6711] text-black font-extrabold text-xs shadow-lg shadow-amber-500/25 hover:scale-105 transition-all">
+                Auditar mi Campaña PPC Gratis ➔
+              </a>
+              <span class="text-[11px] text-slate-400 font-mono">Actualización cada 15 min</span>
+            </div>
+          </div>
+
+          <!-- Visual Canvas Panel 2 con Captura Real de Seller Central -->
+          <div class="lg:col-span-6">
+            <div class="relative rounded-2xl overflow-hidden border border-emerald-500/40 shadow-2xl group bg-black">
+              <img src="img/caso-eficiencia.png" alt="Seller Central PPC Efficiency Case" class="w-full object-cover max-h-72 filter contrast-105">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-4">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-mono text-emerald-400 font-bold bg-black/70 px-2 py-0.5 rounded border border-emerald-500/30">SELLER CENTRAL VERIFIED DATA</span>
+                  <span class="text-white font-tech font-bold">+$171,000 / mes</span>
+                </div>
+                <p class="text-[11px] text-slate-300 mt-1">Corte quirúrgico de keywords con ACoS superior al 30% sin frenar la velocidad de ventas orgánicas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 3: CONVERSIÓN A+ -->
+        <div id="rpanel-3" class="raycast-panel w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div class="lg:col-span-6 space-y-4 text-left">
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/30 font-mono text-xs font-bold">
+                FASE 03 · PSICOLOGÍA US
+              </span>
+              <span class="text-xs text-slate-400">Reingeniería de Catálogo</span>
+            </div>
+            <h3 class="text-2xl sm:text-3xl font-black font-display text-white tracking-tight">
+              Reingeniería Visual y Duplicación de Conversión (21.4%)
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+              El comprador estadounidense lee de forma visual y decide en 3 segundos. Transformamos listings planos en experiencias de marca con <strong class="text-white">Brand Store oficial, tablas comparativas y Contenido A+ Premium</strong> que multiplican la tasa de compra.
+            </p>
+            <div class="grid grid-cols-2 gap-2.5 pt-2">
+              <div class="p-3 rounded-xl bg-black/60 border border-slate-800 text-xs">
+                <div class="text-blue-400 font-bold font-tech text-base">9.2% ➔ 21.4%</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">Ratio de Conversión verificado</div>
+              </div>
+              <div class="p-3 rounded-xl bg-black/60 border border-slate-800 text-xs">
+                <div class="text-emerald-400 font-bold font-tech text-base">+132% Ventas</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">Incremento por SKU intervenido</div>
+              </div>
+            </div>
+            <div class="pt-2 flex items-center gap-3">
+              <a href="#audit-tool" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#FAB412] to-[#FA6711] text-black font-extrabold text-xs shadow-lg shadow-amber-500/25 hover:scale-105 transition-all">
+                Revisar mi Listing Actual ➔
+              </a>
+              <span class="text-[11px] text-slate-400 font-mono">Diseño A+ Nativo US</span>
+            </div>
+          </div>
+
+          <!-- Visual Canvas Panel 3 con Captura Real de Listing Redesign -->
+          <div class="lg:col-span-6">
+            <div class="relative rounded-2xl overflow-hidden border border-blue-500/40 shadow-2xl group bg-black">
+              <img src="img/caso-listing.png" alt="Listing A+ Redesign Case" class="w-full object-cover max-h-72 filter contrast-105">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-4">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-mono text-blue-400 font-bold bg-black/70 px-2 py-0.5 rounded border border-blue-500/30">A+ PREMIUM BRAND STORY</span>
+                  <span class="text-emerald-400 font-tech font-bold">+12.2 pts de conversión</span>
+                </div>
+                <p class="text-[11px] text-slate-300 mt-1">Comparativa directa con la competencia y resolución visual de las dudas más frecuentes del consumidor de EE. UU.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 4: MARGEN NETO POR SKU -->
+        <div id="rpanel-4" class="raycast-panel w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div class="lg:col-span-6 space-y-4 text-left">
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/30 font-mono text-xs font-bold">
+                FASE 04 · PROTECCIÓN FINANCIERA
+              </span>
+              <span class="text-xs text-slate-400">P&L Neto Real</span>
+            </div>
+            <h3 class="text-2xl sm:text-3xl font-black font-display text-white tracking-tight">
+              Beneficio Neto Limpio y Auditoría Continua FBA
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+              No nos dejamos cegar por facturación bruta sin margen. Mastro Minds audita el inventario para <strong class="text-white">reclamar reembolsos automáticos por roturas y pérdidas en FBA</strong> y calcula el beneficio neto descontando cada comisión de Amazon.
+            </p>
+            <div class="grid grid-cols-2 gap-2.5 pt-2">
+              <div class="p-3 rounded-xl bg-black/60 border border-slate-800 text-xs">
+                <div class="text-purple-400 font-bold font-tech text-base">$42,390 Limpio</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">Beneficio neto promedio por mes</div>
+              </div>
+              <div class="p-3 rounded-xl bg-black/60 border border-slate-800 text-xs">
+                <div class="text-emerald-400 font-bold font-tech text-base">+$18,400 FBA</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">Reembolsos recuperados a Amazon</div>
+              </div>
+            </div>
+            <div class="pt-2 flex items-center gap-3">
+              <a href="#audit-tool" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#FAB412] to-[#FA6711] text-black font-extrabold text-xs shadow-lg shadow-amber-500/25 hover:scale-105 transition-all">
+                Calcular mi Margen Neto Real ➔
+              </a>
+              <span class="text-[11px] text-slate-400 font-mono">P&L por SKU en tiempo real</span>
+            </div>
+          </div>
+
+          <!-- Visual Canvas Panel 4 con Captura Real de Resultados y Desglose P&L -->
+          <div class="lg:col-span-6">
+            <div class="relative rounded-2xl overflow-hidden border border-purple-500/40 shadow-2xl group bg-black">
+              <img src="img/resultados-casos.jpg" alt="P&L and SKU Profit Breakdown" class="w-full object-cover max-h-72 filter contrast-105">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-4">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-mono text-purple-400 font-bold bg-black/70 px-2 py-0.5 rounded border border-purple-500/30">P&L SKU UNITARIO</span>
+                  <span class="text-emerald-400 font-tech font-bold">+22.4% Margen Real</span>
+                </div>
+                <p class="text-[11px] text-slate-300 mt-1">Descuento de comisiones por peso/dimensión, almacenamiento estacional y gasto publicitario exacto por unidad vendida.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
   </section>
 
 
@@ -1044,7 +1449,8 @@
     const audienceData = {
       eu: {
         badge: "Para marcas europeas que entran a Amazon EE. UU.",
-        h1: "Lleva tu marca europea a Amazon EE. UU.,<br><span class='shimmer-text'>sin ir a ciegas ni quemar margen.</span>",
+        h1Line1: "Lleva tu marca europea a Amazon EE. UU.,",
+        h1Line2: "sin ir a ciegas ni quemar margen.",
         desc: "Desde el lanzamiento y la fiscalidad (W-8BEN-E, Sales Tax) hasta el beneficio neto por SKU: gestionamos tus listings, publicidad PPC y logística FBA en el mayor mercado del mundo con tecnología propia.",
         cta: "Auditoría de Expansión a EE. UU. ➔",
         c3Title: "Customs Bond & W-8BEN-E",
@@ -1057,7 +1463,8 @@
       },
       us: {
         badge: "Para marcas y vendedores consolidados en Amazon EE. UU.",
-        h1: "Dispara la conversión de tus listings y<br><span class='shimmer-text'>maximiza tu beneficio neto en Amazon.</span>",
+        h1Line1: "Dispara la conversión de tus listings y",
+        h1Line2: "maximiza tu beneficio neto en Amazon.",
         desc: "Deja de quemar presupuesto publicitario. Reconstruimos tu Contenido A+, elevamos tu tasa de conversión a más del 20% y recortamos el TACoS con las reglas de automatización algorítmica de Ibernova™.",
         cta: "Auditoría de Conversión y PPC ➔",
         c3Title: "A+ Content & Video Surge",
@@ -1075,7 +1482,8 @@
       document.getElementById(`btn-aud-${mode}`).classList.add('active');
 
       const data = audienceData[mode];
-      const h1El = document.getElementById('hero-h1');
+      const h1L1 = document.getElementById('hero-h1-1');
+      const h1L2 = document.getElementById('hero-h1-2');
       const pEl = document.getElementById('hero-p');
       const badgeEl = document.getElementById('hero-badge-text');
       const ctaEl = document.getElementById('hero-cta-btn');
@@ -1090,20 +1498,17 @@
       document.getElementById('c4-title').textContent = data.c4Title;
       document.getElementById('c4-desc').textContent = data.c4Desc;
 
-      // Smooth text swap
-      h1El.style.opacity = '0';
-      pEl.style.opacity = '0';
-      setTimeout(() => {
-        h1El.innerHTML = data.h1;
-        pEl.textContent = data.desc;
-        badgeEl.textContent = data.badge;
-        ctaEl.innerHTML = `<span>${data.cta}</span>`;
-        h1El.style.opacity = '1';
-        pEl.style.opacity = '1';
-      }, 200);
+      if (h1L1) h1L1.textContent = data.h1Line1;
+      if (h1L2) h1L2.textContent = data.h1Line2;
+      if (pEl) pEl.textContent = data.desc;
+      if (badgeEl) badgeEl.textContent = data.badge;
+      if (ctaEl) ctaEl.innerHTML = `<span>${data.cta}</span>`;
+
+      // Trigger cinematic Raycast reveal on audience change
+      runRaycastHeroEntrance();
     }
 
-    // 2. ASYMMETRIC EXPLOSION WITH ELASTIC BOUNCE
+    // 2. RAYCAST CINEMATIC ENTRANCE + ASYMMETRIC EXPLOSION
     let isExploded = false;
     const cards = [
       document.getElementById('card-1'),
@@ -1114,6 +1519,15 @@
       document.getElementById('card-6')
     ];
 
+    const raycastReveals = [
+      { id: 'hero-badge-wrap', delay: 0 },
+      { id: 'hero-h1-1', delay: 80 },
+      { id: 'hero-h1-2', delay: 160 },
+      { id: 'hero-p', delay: 240 },
+      { id: 'hero-actions', delay: 320 },
+      { id: 'hero-ticker', delay: 400 }
+    ];
+
     function getResponsiveCardScale() {
       const w = window.innerWidth;
       if (w >= 1440) return 1;
@@ -1122,10 +1536,17 @@
       return 0.65;
     }
 
-    function triggerExplosion() {
+    function runRaycastHeroEntrance() {
+      const bloom = document.getElementById('raycast-bloom');
       const shockwave = document.getElementById('shockwave');
-      
-      // Step A: Pull everyone to dead center
+
+      // Step 1: Reset elements to obsidian dark state
+      raycastReveals.forEach(item => {
+        const el = document.getElementById(item.id);
+        if (el) el.classList.remove('revealed');
+      });
+      if (bloom) bloom.classList.remove('active');
+
       isExploded = false;
       cards.forEach(card => {
         if (!card) return;
@@ -1135,15 +1556,27 @@
         card.style.pointerEvents = 'none';
       });
 
-      // Step B: Shockwave ring flash
-      if (shockwave) {
-        shockwave.classList.remove('shockwave-active');
-        void shockwave.offsetWidth;
-        shockwave.classList.add('shockwave-active');
-      }
+      // Step 2: Staggered upward text entrance (Raycast-style)
+      raycastReveals.forEach(item => {
+        setTimeout(() => {
+          const el = document.getElementById(item.id);
+          if (el) el.classList.add('revealed');
+        }, item.delay);
+      });
 
-      // Step C: Burst outward with asymmetric bounce
+      // Step 3: Ambient Color Bloom lights up behind the text
       setTimeout(() => {
+        if (bloom) bloom.classList.add('active');
+      }, 420);
+
+      // Step 4: Shockwave ring flash + Elastic Explosion burst
+      setTimeout(() => {
+        if (shockwave) {
+          shockwave.classList.remove('shockwave-active');
+          void shockwave.offsetWidth;
+          shockwave.classList.add('shockwave-active');
+        }
+
         const scaleFactor = getResponsiveCardScale();
         cards.forEach((card, index) => {
           if (!card) return;
@@ -1151,7 +1584,7 @@
           const by = parseFloat(card.dataset.baseY) * (scaleFactor < 1 ? 0.9 : 1);
           const brot = parseFloat(card.dataset.baseRot);
 
-          card.style.transition = `all ${0.7 + index * 0.08}s cubic-bezier(0.34, 1.56, 0.64, 1)`;
+          card.style.transition = `all ${0.65 + index * 0.07}s cubic-bezier(0.34, 1.56, 0.64, 1)`;
           card.style.transform = `translate(calc(-50% + ${bx}px), calc(-50% + ${by}px)) scale(${scaleFactor}) rotate(${brot}deg)`;
           card.style.opacity = '1';
           card.style.pointerEvents = 'auto';
@@ -1159,8 +1592,12 @@
 
         setTimeout(() => {
           isExploded = true;
-        }, 800);
-      }, 200);
+        }, 750);
+      }, 500);
+    }
+
+    function triggerExplosion() {
+      runRaycastHeroEntrance();
     }
 
     // 3. CONTINUOUS ORGANIC FLOATING PHYSICS + MOUSE PARALLAX + SPOTLIGHT
@@ -1360,11 +1797,126 @@
       }
     }
 
-    // Trigger initial explosion on load
+    // ================= 8. RAYCAST INTERACTIVE STAGE & CAROUSEL CONTROLLER =================
+    let currentRaycastTab = 1;
+    let raycastAutoPlayActive = true;
+    let raycastProgressValue = 0;
+    let raycastInterval = null;
+    const RAYCAST_TOTAL_TABS = 4;
+    const RAYCAST_DURATION = 6000; // 6s per tab
+    const RAYCAST_TICK = 100; // ms
+
+    const raycastTitles = {
+      1: "ibernova://growth-engine/phase-01-aduanas-fba",
+      2: "ibernova://growth-engine/phase-02-adtech-ppc-8acos",
+      3: "ibernova://growth-engine/phase-03-conversion-a-plus",
+      4: "ibernova://growth-engine/phase-04-net-margin-p-and-l"
+    };
+
+    function switchRaycastTab(tabNum) {
+      if (tabNum < 1) tabNum = RAYCAST_TOTAL_TABS;
+      if (tabNum > RAYCAST_TOTAL_TABS) tabNum = 1;
+      currentRaycastTab = tabNum;
+
+      // Reset progress
+      raycastProgressValue = 0;
+      for (let i = 1; i <= RAYCAST_TOTAL_TABS; i++) {
+        const prog = document.getElementById(`rprog-${i}`);
+        const tab = document.getElementById(`rtab-${i}`);
+        const panel = document.getElementById(`rpanel-${i}`);
+        if (prog) prog.style.width = '0%';
+        if (tab) {
+          if (i === tabNum) {
+            tab.classList.add('active');
+            tab.classList.remove('text-slate-400');
+            tab.classList.add('text-white');
+          } else {
+            tab.classList.remove('active');
+            tab.classList.add('text-slate-400');
+            tab.classList.remove('text-white');
+          }
+        }
+        if (panel) {
+          if (i === tabNum) {
+            panel.classList.add('active');
+          } else {
+            panel.classList.remove('active');
+          }
+        }
+      }
+
+      // Update counter and window title
+      const counterEl = document.getElementById('raycast-step-counter');
+      if (counterEl) counterEl.textContent = `${tabNum} / ${RAYCAST_TOTAL_TABS}`;
+
+      const titleEl = document.getElementById('raycast-window-title');
+      if (titleEl && raycastTitles[tabNum]) {
+        titleEl.textContent = raycastTitles[tabNum];
+      }
+    }
+
+    function nextRaycastTab() {
+      switchRaycastTab(currentRaycastTab + 1);
+    }
+
+    function prevRaycastTab() {
+      switchRaycastTab(currentRaycastTab - 1);
+    }
+
+    function toggleRaycastAutoPlay() {
+      raycastAutoPlayActive = !raycastAutoPlayActive;
+      const icon = document.getElementById('raycast-play-icon');
+      const label = document.getElementById('raycast-play-label');
+      if (raycastAutoPlayActive) {
+        if (icon) icon.textContent = '⏸';
+        if (label) label.textContent = 'Auto-rotación (6s)';
+      } else {
+        if (icon) icon.textContent = '▶';
+        if (label) label.textContent = 'En pausa';
+      }
+    }
+
+    function startRaycastAutoPlayTimer() {
+      clearInterval(raycastInterval);
+      raycastInterval = setInterval(() => {
+        if (!raycastAutoPlayActive) return;
+
+        raycastProgressValue += (RAYCAST_TICK / RAYCAST_DURATION) * 100;
+        const currentProg = document.getElementById(`rprog-${currentRaycastTab}`);
+        if (currentProg) {
+          currentProg.style.width = `${Math.min(raycastProgressValue, 100)}%`;
+        }
+
+        if (raycastProgressValue >= 100) {
+          nextRaycastTab();
+        }
+      }, RAYCAST_TICK);
+    }
+
+    // Pause on hover
     window.addEventListener('DOMContentLoaded', () => {
+      // 1. Run Raycast Hero Entrance
       setTimeout(() => {
-        triggerExplosion();
-      }, 100);
+        runRaycastHeroEntrance();
+      }, 80);
+
+      // 2. Start Raycast Carousel Auto-Play
+      startRaycastAutoPlayTimer();
+
+      // 3. Hover pause bindings
+      const stageContainer = document.getElementById('raycast-stage-container');
+      const tabsNav = document.getElementById('raycast-tabs-nav');
+      [stageContainer, tabsNav].forEach(container => {
+        if (container) {
+          container.addEventListener('mouseenter', () => { raycastAutoPlayActive = false; });
+          container.addEventListener('mouseleave', () => { 
+            const icon = document.getElementById('raycast-play-icon');
+            if (icon && icon.textContent === '⏸') {
+              raycastAutoPlayActive = true; 
+            }
+          });
+        }
+      });
     });
   </script>
 </body>
