@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mastro Minds NYC · Motion & Interactive System</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-display { font-family: 'Poppins', sans-serif; }
+    .font-tech { font-family: 'Space+Grotesk', sans-serif; }
+
+    /* Glows & Gradients */
+    .glow-amber {
+      box-shadow: 0 0 35px -5px rgba(250, 180, 18, 0.35);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.35);
+    }
+    .glow-scanner {
+      box-shadow: 0 0 25px 2px rgba(250, 180, 18, 0.7);
+    }
+
+    /* Laser Scanner Beam */
+    @keyframes scanBeam {
+      0% { top: 0%; opacity: 0.9; }
+      50% { top: 95%; opacity: 1; }
+      100% { top: 0%; opacity: 0.9; }
+    }
+    .scanner-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #FAB412, #FA6711, #FAB412, transparent);
+      box-shadow: 0 0 15px #FAB412, 0 0 30px #FA6711;
+      animation: scanBeam 2.4s ease-in-out infinite;
+    }
+
+    /* Pulse Glow */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    .pulse-glow {
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+
+    /* Grid & Dark mesh background */
+    .bg-mesh-dark {
+      background-color: #06080E;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(250, 180, 18, 0.09) 0px, transparent 50%),
+        radial-gradient(at 100% 10%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 60%, rgba(37, 99, 235, 0.07) 0px, transparent 60%);
+    }
+    .bg-grid {
+      background-size: 32px 32px;
+      background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Reactive card border */
+    .motion-card {
+      position: relative;
+      background: #0E131F;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .motion-card:hover {
+      border-color: rgba(250, 180, 18, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.8), 0 0 25px -5px rgba(250, 180, 18, 0.2);
+    }
+
+    /* Active Tab */
+    .tab-btn.active {
+      background: #FAB412;
+      color: #000;
+      font-weight: 700;
+      box-shadow: 0 0 20px rgba(250, 180, 18, 0.35);
+    }
+  </style>
+</head>
+<body class="bg-[#05070B] text-slate-100 min-h-screen">
+
+  <!-- ================= TOP CONTROLLER BAR ================= -->
+  <header class="sticky top-0 z-50 bg-[#0A0D15]/95 backdrop-blur-md border-b border-slate-800 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#FAB412] to-[#FA6711] flex items-center justify-center text-black font-black font-display text-base shadow-lg shadow-amber-500/20">
+          M
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-white font-display font-bold text-sm tracking-wide">MASTRO MINDS</span>
+            <span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 font-mono font-semibold">MOTION EDITION</span>
+          </div>
+          <p class="text-xs text-slate-400">Inspirado en los mejores estudios de Lapa Ninja Motion</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="flex items-center p-1 bg-slate-900 border border-slate-800 rounded-xl gap-1 text-xs">
+        <button onclick="switchTab('motion-hero')" id="tab-motion-hero" class="tab-btn active px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
+          <span>⚡ 1. Innovación & Hero</span>
+        </button>
+        <button onclick="switchTab('motion-audit')" id="tab-motion-audit" class="tab-btn px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
+          <span>🔍 2. Auditoría en Vivo</span>
+        </button>
+        <button onclick="switchTab('motion-results')" id="tab-motion-results" class="tab-btn px-3.5 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
+          <span>📈 3. Resultados & Comparador</span>
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a href="index.html" class="px-3.5 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs shadow-md shadow-amber-400/20 transition-all flex items-center gap-1.5">
+          <span>💥</span> Ver Narrativa Flagship
+        </a>
+        <button onclick="replayAllAnimations()" class="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-amber-400 border border-slate-700 font-semibold flex items-center gap-1.5 transition-all">
+          <span>🔄</span> Rebobinar Animaciones
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- ================= MAIN VIEWPORT ================= -->
+  <main class="max-w-7xl mx-auto p-4 md:p-6">
+
+    <!-- ======================================================== -->
+    <!-- TAB 1: INNOVACIÓN & HERO (Inspirado en darkroom.engineering) -->
+    <!-- ======================================================== -->
+    <section id="view-motion-hero" class="tab-view block space-y-6">
+      
+      <!-- Studio Benchmark Card -->
+      <div class="p-4 rounded-xl bg-slate-900/60 border border-amber-500/20 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+        <div>
+          <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-widest">Estudio de Referencia: darkroom.engineering</span>
+          <h2 class="text-base font-bold text-white">Innovación Técnica · Micro-interacciones & Luces Reactivas</h2>
+          <p class="text-xs text-slate-400">Atmósfera ultra-oscura, tipografía con ritmo cinético y tarjetas con resplandor magnético al pasar el cursor.</p>
+        </div>
+        <a href="https://lapa.ninja/post/darkroom-engineering/" target="_blank" class="text-xs text-amber-400 hover:underline flex items-center gap-1 shrink-0">
+          <span>Ver caso en Lapa Ninja</span> <span>↗</span>
+        </a>
+      </div>
+
+      <!-- Interactive Canvas -->
+      <div class="rounded-2xl border border-slate-800 bg-mesh-dark bg-grid p-6 md:p-12 relative overflow-hidden">
+        
+        <!-- Glowing Orb Background -->
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none pulse-glow"></div>
+        <div class="absolute top-1/2 -right-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none pulse-glow"></div>
+
+        <!-- HERO CONTENT -->
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+          
+          <!-- Animated Tagline -->
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-amber-500/30 text-amber-400 text-xs font-semibold mb-6 shadow-lg shadow-amber-500/10">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+            <span>Para marcas europeas preparadas para conquistar Amazon EE. UU.</span>
+          </div>
+
+          <!-- Headline with kinetic gradient -->
+          <h1 class="text-3xl md:text-6xl font-black font-display tracking-tight text-white mb-6 leading-[1.15]">
+            Tu marca europea en EE. UU.,<br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-amber-200">con datos reales y beneficio neto.</span>
+          </h1>
+
+          <p class="text-sm md:text-base text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed">
+            Eliminamos las conjeturas en el mayor marketplace del mundo. Gestionamos tus listings, optimizamos tu publicidad PPC y resolvemos la burocracia transatlántica con software propio.
+          </p>
+
+          <!-- Dual Dynamic Action Buttons -->
+          <div class="flex flex-wrap justify-center gap-4 mb-16">
+            <button onclick="switchTab('motion-audit')" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#FAB412] to-[#FA6711] text-black font-bold text-sm shadow-xl shadow-amber-500/25 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+              <span>Probar Auditoría 3-en-1</span>
+              <span>→</span>
+            </button>
+            <a href="https://ibernova-ms.com" target="_blank" class="px-7 py-3.5 rounded-xl bg-slate-900/80 text-white font-semibold text-sm border border-slate-700 hover:border-amber-400 hover:bg-slate-800 transition-all flex items-center gap-2">
+              <span class="text-emerald-400">●</span>
+              <span>Ver Plataforma Ibernova™</span>
+            </a>
+          </div>
+
+          <!-- LIVE METRICS TICKER WITH EASING (Heyo inspired) -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-5 rounded-2xl bg-black/60 border border-slate-800/80 backdrop-blur-md">
+            <div class="p-3 text-center border-r border-slate-800/80">
+              <div class="text-3xl md:text-4xl font-black font-tech text-amber-400">
+                <span id="counter-tacos">0</span>%
+              </div>
+              <div class="text-xs text-slate-400 mt-1">Reducción TACoS Promedio</div>
+            </div>
+
+            <div class="p-3 text-center border-r border-slate-800/80">
+              <div class="text-3xl md:text-4xl font-black font-tech text-emerald-400">
+                <span id="counter-acos">0.00</span>%
+              </div>
+              <div class="text-xs text-slate-400 mt-1">ACoS Auditado en Campañas</div>
+            </div>
+
+            <div class="p-3 text-center border-r border-slate-800/80">
+              <div class="text-3xl md:text-4xl font-black font-tech text-white">
+                $<span id="counter-sales">0</span>K+
+              </div>
+              <div class="text-xs text-slate-400 mt-1">Ventas Gestionadas en EE. UU.</div>
+            </div>
+
+            <div class="p-3 text-center">
+              <div class="text-3xl md:text-4xl font-black font-tech text-blue-400">
+                <span>US ⇄ EU</span>
+              </div>
+              <div class="text-xs text-slate-400 mt-1">Puente Operativo y Logístico</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- BENTO TILES WITH REACTIVE CURSOR EFFECT -->
+        <div class="mt-16 max-w-5xl mx-auto">
+          <div class="text-center mb-8">
+            <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider">RESOLUCIÓN DE INCERTIDUMBRE</span>
+            <h3 class="text-2xl font-bold font-display text-white mt-1">Los 6 Pilares del Salto a EE. UU.</h3>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <div class="motion-card p-5 rounded-2xl">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center font-bold mb-3 text-lg">
+                🏛️
+              </div>
+              <h4 class="text-sm font-bold text-white mb-1.5">Entidad & W-8BEN-E</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">Configuramos la entrevista fiscal de Amazon y estructuramos la banca estadounidense sin crear LLCs innecesarias.</p>
+            </div>
+
+            <div class="motion-card p-5 rounded-2xl">
+              <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center font-bold mb-3 text-lg">
+                💵
+              </div>
+              <h4 class="text-sm font-bold text-white mb-1.5">Sales Tax por Estado</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">Olvídate del IVA. Amazon retiene el impuesto estatal en origen; reestructuramos tus márgenes con precios netos.</p>
+            </div>
+
+            <div class="motion-card p-5 rounded-2xl">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold mb-3 text-lg">
+                🚢
+              </div>
+              <h4 class="text-sm font-bold text-white mb-1.5">Aduanas & FBA</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">Importer of Record y Customs Bond listos para que tu primer contenedor entre directo a los centros logísticos de Amazon.</p>
+            </div>
+
+            <div class="motion-card p-5 rounded-2xl">
+              <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center font-bold mb-3 text-lg">
+                📋
+              </div>
+              <h4 class="text-sm font-bold text-white mb-1.5">Compliance FDA & FCC</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">Normativas de seguridad infantil, advertencias Prop 65 en California y etiquetado con unidades imperiales.</p>
+            </div>
+
+            <div class="motion-card p-5 rounded-2xl">
+              <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center font-bold mb-3 text-lg">
+                🛡️
+              </div>
+              <h4 class="text-sm font-bold text-white mb-1.5">Brand Registry USPTO</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">Registro prioritario de marca para activar Contenido A+, Brand Stores y blindaje contra secuestradores de listings.</p>
+            </div>
+
+            <div class="motion-card p-5 rounded-2xl">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center font-bold mb-3 text-lg">
+                ⚡
+              </div>
+              <h4 class="text-sm font-bold text-white mb-1.5">Algoritmo A9 & PPC</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">No traducimos: rehacemos las palabras clave para la psicología y lenguaje de búsqueda del comprador estadounidense.</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- TAB 2: AUDITORÍA EN VIVO (Inspirado en Vivid Motion & Motion One) -->
+    <!-- ======================================================== -->
+    <section id="view-motion-audit" class="tab-view hidden space-y-6">
+      
+      <!-- Studio Benchmark Card -->
+      <div class="p-4 rounded-xl bg-slate-900/60 border border-amber-500/20 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+        <div>
+          <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-widest">Estudio de Referencia: Vivid Motion & Motion</span>
+          <h2 class="text-base font-bold text-white">Auditoría en Tiempo Real · Efecto Escáner & Diagnóstico Progresivo</h2>
+          <p class="text-xs text-slate-400">Animación de escaneado láser interactiva para analizar Listing, Publicidad y P&L en dos pasos sin fricción.</p>
+        </div>
+        <a href="https://lapa.ninja/post/vivid-motion/" target="_blank" class="text-xs text-amber-400 hover:underline flex items-center gap-1 shrink-0">
+          <span>Ver caso en Lapa Ninja</span> <span>↗</span>
+        </a>
+      </div>
+
+      <!-- AUDIT SIMULATOR CANVAS -->
+      <div class="rounded-2xl border border-slate-800 bg-[#0B0F19] p-6 md:p-10 max-w-4xl mx-auto shadow-2xl">
+        
+        <div class="text-center max-w-xl mx-auto mb-8">
+          <span class="text-xs font-mono text-amber-400 uppercase tracking-widest font-bold">HERRAMIENTA 3-EN-1 MASTRO MINDS</span>
+          <h3 class="text-2xl font-bold font-display text-white mt-1">Auditoría Gratuita de Listing, PPC y Margen</h3>
+          <p class="text-xs text-slate-400 mt-1">Pega el enlace o ASIN de tu producto en Amazon para escanear fugas de rentabilidad y oportunidades inmediatas.</p>
+        </div>
+
+        <!-- Input Box & Trigger -->
+        <div class="bg-black/50 p-2.5 rounded-2xl border border-slate-700 max-w-2xl mx-auto flex flex-col sm:flex-row gap-2 mb-8">
+          <div class="flex-1 flex items-center px-3 gap-2">
+            <span class="text-slate-500 text-sm">🔗</span>
+            <input id="audit-input" type="text" value="https://amazon.com/dp/B09G3HRM9Z" placeholder="Enlace de Amazon o ASIN (ej: B09G3HRM9Z)" class="bg-transparent text-white text-xs w-full focus:outline-none font-mono">
+          </div>
+          <button onclick="startAuditScan()" id="btn-start-scan" class="px-6 py-3 rounded-xl bg-gradient-to-r from-[#FAB412] to-[#FA6711] text-black font-bold text-xs hover:opacity-90 active:scale-95 transition-all shrink-0">
+            Escanear Producto ➔
+          </button>
+        </div>
+
+        <!-- SCANNING CONTAINER (Dynamic Simulation) -->
+        <div id="scan-terminal" class="relative rounded-2xl bg-[#07090F] border border-slate-800 p-6 overflow-hidden min-h-[300px] flex flex-col justify-center">
+          
+          <!-- Animated Laser Beam (hidden until scan starts) -->
+          <div id="laser-beam" class="scanner-line hidden"></div>
+
+          <!-- State 1: Idle Message -->
+          <div id="scan-idle" class="text-center py-8">
+            <div class="text-3xl mb-2">⚡</div>
+            <div class="text-sm font-semibold text-white">Listo para iniciar el diagnóstico</div>
+            <div class="text-xs text-slate-500 mt-1">Haz clic en «Escanear Producto» para activar la simulación de escáner.</div>
+          </div>
+
+          <!-- State 2: Running Scan (Live animation) -->
+          <div id="scan-running" class="hidden space-y-4 py-4">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span id="scan-step-text" class="text-amber-400 animate-pulse">Inspeccionando Seller Central API...</span>
+              <span id="scan-percent" class="text-white font-bold">15%</span>
+            </div>
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-800">
+              <div id="scan-progress-bar" class="bg-gradient-to-r from-amber-400 to-emerald-400 h-2 rounded-full transition-all duration-300" style="width: 15%"></div>
+            </div>
+            <!-- Live terminal logs -->
+            <div class="bg-black/60 rounded-xl p-3 font-mono text-[11px] text-slate-400 space-y-1 border border-slate-800/80">
+              <div id="log-1" class="text-emerald-400">✓ Conexión establecida con catálogo de Amazon US</div>
+              <div id="log-2" class="text-slate-500">⏳ Extrayendo densidad de palabras clave del título y viñetas...</div>
+              <div id="log-3" class="text-slate-500">⏳ Calculando ACoS objetivo vs. ratio de conversión de la categoría...</div>
+              <div id="log-4" class="text-slate-500">⏳ Evaluando tarifas de almacenamiento FBA y margen neto real...</div>
+            </div>
+          </div>
+
+          <!-- State 3: Audit Results Revealed (Motion Reveal) -->
+          <div id="scan-complete" class="hidden space-y-6 animate-fade-in">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-800">
+              <div>
+                <span class="text-xs font-mono text-emerald-400 font-bold uppercase">DIAGNÓSTICO COMPLETADO · PASO 1 DE 2</span>
+                <h4 class="text-lg font-bold text-white mt-0.5">Puntuación de Salud de Listing: 64/100</h4>
+                <p class="text-xs text-slate-400">Detectamos 3 puntos críticos de pérdida de margen publicitario y conversión.</p>
+              </div>
+              <div class="px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-tech font-bold text-xl">
+                Oportunidad: +$18,400/mes
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="p-3.5 rounded-xl bg-slate-900/80 border border-red-500/30">
+                <div class="text-xs text-red-400 font-bold">1. Publicidad PPC (ACoS 34.2%)</div>
+                <div class="text-[11px] text-slate-300 mt-1">42 términos de búsqueda no rentables consumen el 38% del presupuesto diario.</div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-slate-900/80 border border-amber-500/30">
+                <div class="text-xs text-amber-400 font-bold">2. Contenido A+ y Visuales</div>
+                <div class="text-[11px] text-slate-300 mt-1">Faltan módulos de comparación de producto y optimización para visualización móvil en EE. UU.</div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-slate-900/80 border border-emerald-500/30">
+                <div class="text-xs text-emerald-400 font-bold">3. Reclamaciones FBA</div>
+                <div class="text-[11px] text-slate-300 mt-1">Se detectan $1,420 en discrepancias de unidades dañadas pendientes de reembolso por Amazon.</div>
+              </div>
+            </div>
+
+            <!-- Paso 2 Call to Action -->
+            <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row justify-between items-center gap-3">
+              <div>
+                <div class="text-xs font-bold text-amber-300">Paso 2: Presentación de Estrategia Personalizada (30 min)</div>
+                <div class="text-[11px] text-slate-400">Revisamos el informe completo de Ibernova y el plan de acción con Antonio Mazzei.</div>
+              </div>
+              <button class="px-5 py-2.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs shrink-0 shadow-lg shadow-amber-400/20">
+                Reservar en Calendly ➔
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- TAB 3: RESULTADOS & COMPARADOR (Inspirado en Heyo Studios) -->
+    <!-- ======================================================== -->
+    <section id="view-motion-results" class="tab-view hidden space-y-6">
+      
+      <!-- Studio Benchmark Card -->
+      <div class="p-4 rounded-xl bg-slate-900/60 border border-amber-500/20 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+        <div>
+          <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-widest">Estudio de Referencia: Heyo Studios</span>
+          <h2 class="text-base font-bold text-white">Resultados Auditables · Comparador Interactivo Antes vs. Después</h2>
+          <p class="text-xs text-slate-400">Prueba social contundente («The Proof is in the Profit»). Cifras reales demostradas con Seller Central y no promesas vacías.</p>
+        </div>
+        <a href="https://lapa.ninja/post/heyo/" target="_blank" class="text-xs text-amber-400 hover:underline flex items-center gap-1 shrink-0">
+          <span>Ver caso en Lapa Ninja</span> <span>↗</span>
+        </a>
+      </div>
+
+      <!-- COMPARATOR CANVAS -->
+      <div class="rounded-2xl border border-slate-800 bg-[#090D18] p-6 md:p-10 max-w-4xl mx-auto shadow-2xl">
+        
+        <div class="text-center max-w-xl mx-auto mb-8">
+          <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest font-bold">CASO REAL VERIFICADO</span>
+          <h3 class="text-2xl font-bold font-display text-white mt-1">Caso de Estudio: Efficiency Engine</h3>
+          <p class="text-xs text-slate-400 mt-1">Intercambia entre el punto de partida del cliente y los resultados conseguidos por el equipo de Mastro Minds.</p>
+        </div>
+
+        <!-- Interactive Switcher Mode -->
+        <div class="flex justify-center mb-8">
+          <div class="p-1 bg-black/60 border border-slate-800 rounded-xl flex gap-1 text-xs">
+            <button onclick="setCompareMode('before')" id="btn-comp-before" class="px-4 py-2 rounded-lg font-semibold text-slate-400 hover:text-white transition-all">
+              🔴 Antes de Mastro Minds (Oct 2022)
+            </button>
+            <button onclick="setCompareMode('after')" id="btn-comp-after" class="px-4 py-2 rounded-lg bg-emerald-500 text-black font-bold shadow-lg shadow-emerald-500/30 transition-all">
+              🟢 Después con Mastro Minds (Jun 2024)
+            </button>
+          </div>
+        </div>
+
+        <!-- Comparative Display Board -->
+        <div id="compare-board" class="p-6 rounded-2xl bg-slate-900/90 border border-emerald-500/40 transition-all duration-500">
+          
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-slate-800">
+            <div>
+              <span id="comp-status-badge" class="px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold">
+                ESTADO ACTUAL: ESCALADO SOSTENIBLE
+              </span>
+              <h4 id="comp-title" class="text-xl font-bold text-white mt-2">Facturación Mensual: $171,760</h4>
+              <p id="comp-desc" class="text-xs text-slate-300 mt-1">Crecimiento auditado de +1,147% con optimización de inventario FBA y reestructuración completa de campañas PPC.</p>
+            </div>
+            
+            <div class="text-right">
+              <div class="text-xs text-slate-400">ACoS de la Cuenta</div>
+              <div id="comp-acos" class="text-3xl font-black font-tech text-emerald-400">8.02%</div>
+              <div id="comp-acos-label" class="text-[11px] text-emerald-400">Margen neto protegido</div>
+            </div>
+          </div>
+
+          <!-- Metric Cards Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            <div class="p-4 rounded-xl bg-black/40 border border-slate-800">
+              <div class="text-xs text-slate-400">Estrategia de Listings</div>
+              <div id="comp-metric-1" class="text-sm font-bold text-white mt-1">Contenido A+ de Marca & Video</div>
+              <div class="text-[11px] text-slate-500 mt-0.5">Ratio de conversión subió del 9% al 21.4%</div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-black/40 border border-slate-800">
+              <div class="text-xs text-slate-400">Gestión de Publicidad</div>
+              <div id="comp-metric-2" class="text-sm font-bold text-white mt-1">PPC Automatizado con Ibernova</div>
+              <div class="text-[11px] text-slate-500 mt-0.5">Control de pujas por tramos horarios</div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-black/40 border border-slate-800">
+              <div class="text-xs text-slate-400">Logística FBA</div>
+              <div id="comp-metric-3" class="text-sm font-bold text-white mt-1">Stock Predictivo Cero Roturas</div>
+              <div class="text-[11px] text-slate-500 mt-0.5">Reposición sincronizada cada 21 días</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- JAVASCRIPT CONTROLLERS -->
+  <script>
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      
+      const view = document.getElementById(`view-${tabId}`);
+      const btn = document.getElementById(`tab-${tabId}`);
+      if (view && btn) {
+        view.classList.remove('hidden');
+        btn.classList.add('active');
+      }
+
+      if (tabId === 'motion-hero') {
+        runCounters();
+      }
+    }
+
+    // Smooth Easing Counter
+    function animateValue(id, start, end, duration, decimals = 0) {
+      const obj = document.getElementById(id);
+      if (!obj) return;
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const easeOutQuad = 1 - (1 - progress) * (1 - progress);
+        const current = (easeOutQuad * (end - start) + start).toFixed(decimals);
+        obj.textContent = current;
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    function runCounters() {
+      animateValue("counter-tacos", 0, 34, 1800, 0);
+      animateValue("counter-acos", 0, 8.02, 2000, 2);
+      animateValue("counter-sales", 0, 847, 2200, 0);
+    }
+
+    // Comparative Switcher
+    function setCompareMode(mode) {
+      const btnBefore = document.getElementById('btn-comp-before');
+      const btnAfter = document.getElementById('btn-comp-after');
+      const board = document.getElementById('compare-board');
+      
+      const badge = document.getElementById('comp-status-badge');
+      const title = document.getElementById('comp-title');
+      const desc = document.getElementById('comp-desc');
+      const acos = document.getElementById('comp-acos');
+      const acosLabel = document.getElementById('comp-acos-label');
+
+      if (mode === 'before') {
+        btnBefore.className = "px-4 py-2 rounded-lg bg-red-600 text-white font-bold shadow-lg shadow-red-600/30 transition-all";
+        btnAfter.className = "px-4 py-2 rounded-lg font-semibold text-slate-400 hover:text-white transition-all";
+        board.className = "p-6 rounded-2xl bg-slate-900/90 border border-red-500/40 transition-all duration-500";
+
+        badge.className = "px-2.5 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/30 text-xs font-mono font-bold";
+        badge.textContent = "ESTADO PREVIO: SIN CONTROL DE GASTO";
+        title.textContent = "Facturación Mensual: $13,772";
+        desc.textContent = "Pérdida continua de margen por campañas genéricas desalineadas y roturas frecuentes de inventario en FBA.";
+        acos.textContent = "35.00%";
+        acos.className = "text-3xl font-black font-tech text-red-400";
+        acosLabel.textContent = "Presupuesto quemado sin ROI";
+        acosLabel.className = "text-[11px] text-red-400";
+      } else {
+        btnAfter.className = "px-4 py-2 rounded-lg bg-emerald-500 text-black font-bold shadow-lg shadow-emerald-500/30 transition-all";
+        btnBefore.className = "px-4 py-2 rounded-lg font-semibold text-slate-400 hover:text-white transition-all";
+        board.className = "p-6 rounded-2xl bg-slate-900/90 border border-emerald-500/40 transition-all duration-500";
+
+        badge.className = "px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold";
+        badge.textContent = "ESTADO ACTUAL: ESCALADO SOSTENIBLE";
+        title.textContent = "Facturación Mensual: $171,760";
+        desc.textContent = "Crecimiento auditado de +1,147% con optimización de inventario FBA y reestructuración completa de campañas PPC.";
+        acos.textContent = "8.02%";
+        acos.className = "text-3xl font-black font-tech text-emerald-400";
+        acosLabel.textContent = "Margen neto protegido";
+        acosLabel.className = "text-[11px] text-emerald-400";
+      }
+    }
+
+    // Live Audit Scanner Simulation
+    let scanInterval = null;
+    function startAuditScan() {
+      const idle = document.getElementById('scan-idle');
+      const running = document.getElementById('scan-running');
+      const complete = document.getElementById('scan-complete');
+      const beam = document.getElementById('laser-beam');
+      const btn = document.getElementById('btn-start-scan');
+
+      idle.classList.add('hidden');
+      complete.classList.add('hidden');
+      running.classList.remove('hidden');
+      beam.classList.remove('hidden');
+      btn.disabled = true;
+      btn.textContent = "Escaneando...";
+
+      let progress = 10;
+      const bar = document.getElementById('scan-progress-bar');
+      const pText = document.getElementById('scan-percent');
+      const sText = document.getElementById('scan-step-text');
+
+      clearInterval(scanInterval);
+      scanInterval = setInterval(() => {
+        progress += 18;
+        if (progress > 100) progress = 100;
+        
+        bar.style.width = progress + '%';
+        pText.textContent = progress + '%';
+
+        if (progress > 30 && progress < 60) {
+          sText.textContent = "Analizando keywords y ACoS en Sponsored Products...";
+          document.getElementById('log-2').className = "text-emerald-400";
+        } else if (progress >= 60 && progress < 90) {
+          sText.textContent = "Calculando discrepancias de tarifas FBA y comisiones...";
+          document.getElementById('log-3').className = "text-emerald-400";
+        } else if (progress >= 90) {
+          sText.textContent = "Consolidando diagnóstico de rentabilidad...";
+          document.getElementById('log-4').className = "text-emerald-400";
+        }
+
+        if (progress >= 100) {
+          clearInterval(scanInterval);
+          setTimeout(() => {
+            running.classList.add('hidden');
+            beam.classList.add('hidden');
+            complete.classList.remove('hidden');
+            btn.disabled = false;
+            btn.textContent = "Escanear de Nuevo";
+          }, 600);
+        }
+      }, 450);
+    }
+
+    function replayAllAnimations() {
+      runCounters();
+      setCompareMode('after');
+      startAuditScan();
+    }
+
+    // Auto-run on start
+    window.addEventListener('DOMContentLoaded', () => {
+      runCounters();
+    });
+  </script>
+</body>
+</html>
