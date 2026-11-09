@@ -109,17 +109,31 @@
     /* ================= RAYCAST-STYLE CINEMATIC REVEAL & SHOWCASE ================= */
     .raycast-text-reveal {
       opacity: 0;
-      transform: translateY(22px);
-      filter: blur(4px);
-      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), 
-                  transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), 
-                  filter 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(32px);
+      filter: blur(8px);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), 
+                  transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), 
+                  filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
       will-change: opacity, transform, filter;
     }
     .raycast-text-reveal.revealed {
       opacity: 1;
       transform: translateY(0);
       filter: blur(0px);
+    }
+
+    /* Cortina de Oscuridad Total Raycast (Fondo 100% Negro Puro inicial) */
+    .hero-black-curtain {
+      position: absolute;
+      inset: 0;
+      background: #020307;
+      z-index: 12;
+      opacity: 1;
+      pointer-events: none;
+      transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .hero-black-curtain.dissolved {
+      opacity: 0;
     }
 
     /* Raycast Ambient Background Bloom (lighting up after text arrives) */
@@ -131,16 +145,93 @@
       width: 820px;
       height: 540px;
       border-radius: 9999px;
-      background: radial-gradient(ellipse at center, rgba(250, 180, 18, 0.32) 0%, rgba(250, 103, 17, 0.16) 42%, rgba(16, 185, 129, 0.08) 65%, transparent 80%);
+      background: radial-gradient(ellipse at center, rgba(250, 180, 18, 0.35) 0%, rgba(250, 103, 17, 0.18) 42%, rgba(16, 185, 129, 0.09) 65%, transparent 80%);
       filter: blur(85px);
       pointer-events: none;
       opacity: 0;
-      transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
       z-index: 5;
     }
     .raycast-ambient-bloom.active {
       opacity: 1;
-      transform: translate(-50%, -50%) scale(1.15);
+      transform: translate(-50%, -50%) scale(1.18);
+    }
+
+    /* ================= TORCH & FLASHLIGHT SYSTEM ================= */
+    .torch-follower {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 55;
+      will-change: transform;
+      transition: opacity 0.3s ease;
+    }
+    .torch-head {
+      position: relative;
+      width: 42px;
+      height: 42px;
+      transform: translate(-50%, -50%);
+      border-radius: 9999px;
+      background: rgba(8, 12, 22, 0.75);
+      border: 1.5px solid rgba(250, 180, 18, 0.9);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 32px rgba(250, 180, 18, 0.65), inset 0 0 14px rgba(250, 180, 18, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .torch-beam-cone {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 190px;
+      height: 190px;
+      transform: translate(-50%, -50%);
+      border-radius: 9999px;
+      background: radial-gradient(circle, rgba(255, 235, 150, 0.38) 0%, rgba(250, 180, 18, 0.20) 35%, transparent 70%);
+      pointer-events: none;
+    }
+    .torch-laser-dot {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      transform: translate(-50%, -50%);
+      border-radius: 9999px;
+      background: #FFFFFF;
+      box-shadow: 0 0 10px #FAB412, 0 0 20px #FAB412;
+    }
+    .torch-label {
+      position: absolute;
+      top: -26px;
+      left: 24px;
+      white-space: nowrap;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(3, 5, 10, 0.95);
+      border: 1px solid rgba(250, 180, 18, 0.7);
+      color: #FAB412;
+      font-family: monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
+      pointer-events: none;
+    }
+    .torch-hovering .torch-head {
+      transform: translate(-50%, -50%) scale(1.3);
+      border-color: #FFF;
+      box-shadow: 0 0 45px rgba(250, 180, 18, 0.95), inset 0 0 20px rgba(250, 180, 18, 0.7);
+    }
+    .torch-hovering .torch-label {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     /* Raycast Segmented Tabs */
@@ -305,8 +396,18 @@
     <div class="aurora-orb-blue bottom-10 left-1/4"></div>
   </div>
 
-  <!-- ================= INTERACTIVE CURSOR SPOTLIGHT ================= -->
-  <div id="cursor-spotlight" class="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300" style="background: radial-gradient(650px circle at var(--mouse-screen-x, 50vw) var(--mouse-screen-y, 50vh), rgba(250, 180, 18, 0.07), transparent 60%);"></div>
+  <!-- ================= INTERACTIVE CURSOR SPOTLIGHT & TORCH BEAM ================= -->
+  <div id="cursor-spotlight" class="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300" style="background: radial-gradient(160px circle at var(--mouse-screen-x, 50vw) var(--mouse-screen-y, 50vh), rgba(255, 235, 160, 0.42) 0%, rgba(250, 180, 18, 0.24) 35%, transparent 70%), radial-gradient(420px circle at var(--mouse-screen-x, 50vw) var(--mouse-screen-y, 50vh), rgba(250, 180, 18, 0.18) 0%, rgba(250, 103, 17, 0.08) 50%, transparent 80%), radial-gradient(780px circle at var(--mouse-screen-x, 50vw) var(--mouse-screen-y, 50vh), rgba(250, 180, 18, 0.08) 0%, transparent 65%);"></div>
+
+  <!-- Physical Flashlight / Linterna Follower Reticle -->
+  <div id="torch-reticle" class="torch-follower hidden sm:block">
+    <div class="torch-beam-cone"></div>
+    <div class="torch-head">
+      <span class="text-sm select-none">🔦</span>
+      <div class="torch-laser-dot"></div>
+    </div>
+    <div id="torch-label" class="torch-label">AUDIT SPOTLIGHT</div>
+  </div>
 
   <!-- ================= FLOATING SCROLL COMPANION (SIGUE EL SCROLL) ================= -->
   <aside id="scroll-hud" class="scroll-companion bg-[#0A0E1A]/90 border border-slate-700/80 rounded-2xl p-3 shadow-2xl flex items-center gap-3">
@@ -387,6 +488,9 @@
   <!-- ================= HERO EXPLOSION STAGE ================= -->
   <section id="hero-stage" class="relative min-h-[740px] md:min-h-[850px] flex flex-col items-center justify-center px-4 overflow-hidden bg-gradient-to-b from-[#080C18] via-[#05070E] to-[#05070E] cyber-grid z-10 w-full text-center">
     
+    <!-- Cortina de Oscuridad Total Raycast (Fondo Negro Puro que se retira tras el texto) -->
+    <div id="hero-black-curtain" class="hero-black-curtain"></div>
+
     <!-- Raycast Ambient Color Bloom behind text -->
     <div id="raycast-bloom" class="raycast-ambient-bloom"></div>
 
@@ -1520,12 +1624,12 @@
     ];
 
     const raycastReveals = [
-      { id: 'hero-badge-wrap', delay: 0 },
-      { id: 'hero-h1-1', delay: 80 },
-      { id: 'hero-h1-2', delay: 160 },
-      { id: 'hero-p', delay: 240 },
-      { id: 'hero-actions', delay: 320 },
-      { id: 'hero-ticker', delay: 400 }
+      { id: 'hero-badge-wrap', delay: 800 },
+      { id: 'hero-h1-1', delay: 1700 },
+      { id: 'hero-h1-2', delay: 2600 },
+      { id: 'hero-p', delay: 3500 },
+      { id: 'hero-actions', delay: 4400 },
+      { id: 'hero-ticker', delay: 5200 }
     ];
 
     function getResponsiveCardScale() {
@@ -1536,16 +1640,27 @@
       return 0.65;
     }
 
+    let heroEntranceTimeout = null;
+    let heroRevealTimeouts = [];
+
     function runRaycastHeroEntrance() {
+      const curtain = document.getElementById('hero-black-curtain');
       const bloom = document.getElementById('raycast-bloom');
       const shockwave = document.getElementById('shockwave');
 
-      // Step 1: Reset elements to obsidian dark state
+      // Clear any pending sequence timeouts if re-triggered
+      heroRevealTimeouts.forEach(t => clearTimeout(t));
+      heroRevealTimeouts = [];
+
+      // Step 1: Reset elements to pure obsidian dark void state
+      if (curtain) curtain.classList.remove('dissolved');
+      if (bloom) bloom.classList.remove('active');
+      if (shockwave) shockwave.classList.remove('shockwave-active');
+
       raycastReveals.forEach(item => {
         const el = document.getElementById(item.id);
         if (el) el.classList.remove('revealed');
       });
-      if (bloom) bloom.classList.remove('active');
 
       isExploded = false;
       cards.forEach(card => {
@@ -1556,21 +1671,24 @@
         card.style.pointerEvents = 'none';
       });
 
-      // Step 2: Staggered upward text entrance (Raycast-style)
+      // Step 2: Staggered upward text entrance (slow, deliberate cinema pacing)
       raycastReveals.forEach(item => {
-        setTimeout(() => {
+        const t = setTimeout(() => {
           const el = document.getElementById(item.id);
           if (el) el.classList.add('revealed');
         }, item.delay);
+        heroRevealTimeouts.push(t);
       });
 
-      // Step 3: Ambient Color Bloom lights up behind the text
-      setTimeout(() => {
+      // Step 3: Pure black curtain dissolves + Ambient Color Bloom lights up behind the text
+      const tBloom = setTimeout(() => {
+        if (curtain) curtain.classList.add('dissolved');
         if (bloom) bloom.classList.add('active');
-      }, 420);
+      }, 6100);
+      heroRevealTimeouts.push(tBloom);
 
       // Step 4: Shockwave ring flash + Elastic Explosion burst
-      setTimeout(() => {
+      const tExplosion = setTimeout(() => {
         if (shockwave) {
           shockwave.classList.remove('shockwave-active');
           void shockwave.offsetWidth;
@@ -1584,23 +1702,25 @@
           const by = parseFloat(card.dataset.baseY) * (scaleFactor < 1 ? 0.9 : 1);
           const brot = parseFloat(card.dataset.baseRot);
 
-          card.style.transition = `all ${0.65 + index * 0.07}s cubic-bezier(0.34, 1.56, 0.64, 1)`;
+          card.style.transition = `all ${0.75 + index * 0.08}s cubic-bezier(0.34, 1.56, 0.64, 1)`;
           card.style.transform = `translate(calc(-50% + ${bx}px), calc(-50% + ${by}px)) scale(${scaleFactor}) rotate(${brot}deg)`;
           card.style.opacity = '1';
           card.style.pointerEvents = 'auto';
         });
 
-        setTimeout(() => {
+        const tDone = setTimeout(() => {
           isExploded = true;
-        }, 750);
-      }, 500);
+        }, 850);
+        heroRevealTimeouts.push(tDone);
+      }, 6800);
+      heroRevealTimeouts.push(tExplosion);
     }
 
     function triggerExplosion() {
       runRaycastHeroEntrance();
     }
 
-    // 3. CONTINUOUS ORGANIC FLOATING PHYSICS + MOUSE PARALLAX + SPOTLIGHT
+    // ================= MOUSE COORDINATES & GLOBAL CURSOR TRACKING =================
     let targetMouseX = 0, targetMouseY = 0;
     let currentMouseX = 0, currentMouseY = 0;
     let screenMouseX = window.innerWidth / 2;
@@ -1617,6 +1737,73 @@
       document.documentElement.style.setProperty('--mouse-screen-x', `${e.clientX}px`);
       document.documentElement.style.setProperty('--mouse-screen-y', `${e.clientY}px`);
     });
+
+    // ================= TORCH & FLASHLIGHT INTERACTIVE CONTROLLER =================
+    let torchX = window.innerWidth / 2;
+    let torchY = window.innerHeight / 2;
+    let torchAngle = 0;
+    const torchEl = document.getElementById('torch-reticle');
+    const torchHead = torchEl ? torchEl.querySelector('.torch-head') : null;
+    const torchLabel = document.getElementById('torch-label');
+
+    function animateTorchFollower() {
+      if (torchEl && screenMouseX !== undefined) {
+        const dx = screenMouseX - torchX;
+        const dy = screenMouseY - torchY;
+
+        // Smooth spring follow
+        torchX += dx * 0.16;
+        torchY += dy * 0.16;
+
+        // Dynamic angle pointing towards movement
+        const speed = Math.sqrt(dx * dx + dy * dy);
+        if (speed > 1.2) {
+          const targetAngle = Math.atan2(dy, dx) * (180 / Math.PI) + 45; // 45deg flashlight tilt
+          torchAngle += (targetAngle - torchAngle) * 0.12;
+        }
+
+        torchEl.style.transform = `translate3d(${torchX}px, ${torchY}px, 0)`;
+        if (torchHead) {
+          torchHead.style.transform = `translate(-50%, -50%) rotate(${torchAngle}deg)`;
+        }
+      }
+      requestAnimationFrame(animateTorchFollower);
+    }
+    animateTorchFollower();
+
+    function setupTorchHoverTriggers() {
+      if (!torchEl || !torchLabel) return;
+
+      const hoverTargets = [
+        { sel: '.explosion-card', text: '🔦 AUDITAR KPI' },
+        { sel: '.deck-card', text: '📑 FASE DEL MÉTODO' },
+        { sel: '.raycast-tab-btn', text: '⚡ WORKFLOW RAYCAST' },
+        { sel: '#hero-cta-btn, .audience-btn, a[href^="#audit"]', text: '🎯 INSPECCIONAR' },
+        { sel: '#audit-tool', text: '🔬 SCANNER 3-EN-1' }
+      ];
+
+      hoverTargets.forEach(({ sel, text }) => {
+        document.querySelectorAll(sel).forEach(el => {
+          el.addEventListener('mouseenter', () => {
+            torchEl.classList.add('torch-hovering');
+            torchLabel.textContent = text;
+          });
+          el.addEventListener('mouseleave', () => {
+            torchEl.classList.remove('torch-hovering');
+          });
+        });
+      });
+
+      // Window boundary visibility
+      document.addEventListener('mouseleave', () => {
+        torchEl.style.opacity = '0';
+      });
+      document.addEventListener('mouseenter', () => {
+        torchEl.style.opacity = '1';
+      });
+    }
+
+    // 3. CONTINUOUS ORGANIC FLOATING PHYSICS + MOUSE PARALLAX
 
     function animatePhysicsAndParallax() {
       // Smooth interpolation (lerp)
@@ -1893,17 +2080,18 @@
       }, RAYCAST_TICK);
     }
 
-    // Pause on hover
-    window.addEventListener('DOMContentLoaded', () => {
-      // 1. Run Raycast Hero Entrance
-      setTimeout(() => {
-        runRaycastHeroEntrance();
-      }, 80);
+    // Setup events on page load (handles both loading and already-parsed states)
+    function initHeroAndShowcase() {
+      // 1. Initialize Torch Reticle Hover Triggers
+      setupTorchHoverTriggers();
 
-      // 2. Start Raycast Carousel Auto-Play
+      // 2. Run Raycast Hero Entrance (starts from pure black void)
+      runRaycastHeroEntrance();
+
+      // 3. Start Raycast Carousel Auto-Play
       startRaycastAutoPlayTimer();
 
-      // 3. Hover pause bindings
+      // 4. Hover pause bindings
       const stageContainer = document.getElementById('raycast-stage-container');
       const tabsNav = document.getElementById('raycast-tabs-nav');
       [stageContainer, tabsNav].forEach(container => {
@@ -1917,7 +2105,13 @@
           });
         }
       });
-    });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initHeroAndShowcase);
+    } else {
+      initHeroAndShowcase();
+    }
   </script>
 </body>
 </html>
