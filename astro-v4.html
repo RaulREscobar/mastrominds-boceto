@@ -1292,63 +1292,160 @@ body.agent [data-agent]::before {
   /* ------------------------------------------------------------------------
      1. DEFINICIÓN DEL MUNDO 3D, PUNTOS DE MARKETPLACE, ARCOS Y CARTELITOS
      ------------------------------------------------------------------------ */
-  // Nodos reales de operación/ventas e-commerce (latitud/longitud en grados)
+  // Nodos reales de operación/ventas e-commerce ubicados exactamente sobre sus continentes (lat/lon)
   const MARKET_NODES = [
     { id: 'MIA', name: 'Miami HQ',      lat: 25.8,  lon: -80.2,  hub: true,  color: '#2ECC71' },
     { id: 'NYC', name: 'New York',      lat: 40.7,  lon: -74.0,  hub: true,  color: '#FAB412' },
-    { id: 'LAX', name: 'Los Angeles',   lat: 34.0,  lon: -118.2, hub: false, color: '#2ECC71' },
+    { id: 'LAX', name: 'Los Angeles',   lat: 34.0,  lon: -118.2, hub: true,  color: '#2ECC71' },
     { id: 'DFW', name: 'Texas FBA',     lat: 32.7,  lon: -96.8,  hub: false, color: '#FAB412' },
     { id: 'SEA', name: 'Seattle AMZ',   lat: 47.6,  lon: -122.3, hub: true,  color: '#FA6711' },
     { id: 'YYZ', name: 'Toronto',       lat: 43.6,  lon: -79.3,  hub: false, color: '#38BDF8' },
     { id: 'MEX', name: 'CDMX',          lat: 19.4,  lon: -99.1,  hub: false, color: '#FAB412' },
-    { id: 'BOG', name: 'Bogotá',        lat: 4.7,   lon: -74.0,  hub: false, color: '#2ECC71' },
-    { id: 'GRU', name: 'São Paulo',     lat: -23.5, lon: -46.6,  hub: false, color: '#38BDF8' },
+    { id: 'BOG', name: 'Bogotá',        lat: 4.7,   lon: -74.0,  hub: true,  color: '#2ECC71' },
+    { id: 'GRU', name: 'São Paulo',     lat: -23.5, lon: -46.6,  hub: true,  color: '#38BDF8' },
     { id: 'MAD', name: 'Madrid EU',     lat: 40.4,  lon: -3.7,   hub: true,  color: '#FAB412' },
-    { id: 'LHR', name: 'London UK',     lat: 51.5,  lon: -0.1,   hub: false, color: '#2ECC71' },
+    { id: 'LHR', name: 'Londres UK',    lat: 51.5,  lon: -0.1,   hub: true,  color: '#2ECC71' },
     { id: 'FRA', name: 'Frankfurt DE',  lat: 50.1,  lon: 8.6,    hub: false, color: '#FA6711' },
-    { id: 'NRT', name: 'Tokyo JP',      lat: 35.6,  lon: 139.6,  hub: false, color: '#38BDF8' },
-    { id: 'SYD', name: 'Sydney AU',     lat: -33.8, lon: 151.2,  hub: false, color: '#2ECC71' }
+    { id: 'NRT', name: 'Tokio JP',      lat: 35.6,  lon: 139.6,  hub: true,  color: '#38BDF8' },
+    { id: 'SYD', name: 'Sídney AU',     lat: -33.8, lon: 151.2,  hub: true,  color: '#2ECC71' }
   ];
 
-  // Nube de puntos de continentes aproximados para que el globo se vea nítido y reconocible
-  const CONTINENT_PATCHES = [
-    // Norteamérica
-    { latMin: 25, latMax: 60, lonMin: -125, lonMax: -70, step: 6 },
-    { latMin: 15, latMax: 25, lonMin: -105, lonMax: -80, step: 6 },
-    // Sudamérica
-    { latMin: -45, latMax: 10, lonMin: -78, lonMax: -38, step: 6.5 },
-    // Europa
-    { latMin: 36, latMax: 64, lonMin: -9, lonMax: 35, step: 5.5 },
-    // África
-    { latMin: -32, latMax: 34, lonMin: -16, lonMax: 46, step: 7 },
-    // Asia
-    { latMin: 15, latMax: 62, lonMin: 40, lonMax: 142, step: 7.5 },
-    // Australia
-    { latMin: -38, latMax: -14, lonMin: 115, lonMax: 152, step: 6.5 }
+  // Polígonos geográficos reales de los continentes e islas principales [lon, lat]
+  const RAW_CONTINENTS = [
+    {
+      name: 'NORTEAMÉRICA', labelLat: 42, labelLon: -100,
+      coords: [
+        [-165,64],[-160,70],[-140,70],[-125,70],[-105,68],[-92,63],[-80,62],[-90,56],[-78,54],[-77,61],
+        [-64,60],[-55,52],[-60,46],[-67,45],[-70,42],[-74,40],[-76,35],[-80,31],[-80.2,25.4],[-82,25.2],
+        [-83,29.5],[-89,30],[-95,29],[-97,26],[-97,21],[-90,21],[-87,21],[-88,16],[-84,15],[-83,10],
+        [-78,8],[-80,8],[-84,9],[-88,13],[-93,15],[-97,16],[-105,20],[-109,24],[-113,30],[-110,23],
+        [-115,28],[-118,33.5],[-122.5,38],[-124,43],[-124,48.5],[-130,54],[-138,59],[-150,60],[-162,58],[-165,64]
+      ]
+    },
+    {
+      name: '', labelLat: 22, labelLon: -79, // Cuba
+      coords: [[-84.5,22],[-80,23],[-74.5,20.2],[-77,19.8],[-82,21],[-84.5,22]]
+    },
+    {
+      name: '', labelLat: 72, labelLon: -42, // Groenlandia
+      coords: [[-54,60],[-43,60],[-22,70],[-18,78],[-35,82],[-56,78],[-62,74],[-54,60]]
+    },
+    {
+      name: 'SUDAMÉRICA', labelLat: -14, labelLon: -58,
+      coords: [
+        [-77,9],[-72,12],[-62,10],[-52,5],[-48,0],[-39,-4],[-35,-6],[-35,-11],[-39,-18],[-41,-22],
+        [-48,-26],[-53,-33],[-58,-38],[-63,-42],[-67,-48],[-68,-54],[-73,-53],[-75,-45],[-72,-35],
+        [-70,-24],[-71,-18],[-77,-12],[-81,-5],[-79,2],[-77,9]
+      ]
+    },
+    {
+      name: 'EUROPA', labelLat: 49, labelLon: 14,
+      coords: [
+        [-9.5,37],[-9.2,43],[-2,43.5],[-4.5,48],[2,51],[8.5,54],[8.5,57],[11,57],[12,55],[20,55],
+        [24,60],[21,64],[14,68],[20,70],[29,71],[32,69],[42,67],[55,68],[60,60],[52,46],[40,44],
+        [30,46],[28,41],[24,40],[23,37],[20,39],[18,42],[13.5,45.5],[16,41],[15.5,38],[12.5,42],
+        [9.5,44],[5,43.5],[3,42.5],[0,40],[-2,36.8],[-5.5,36],[-9.5,37]
+      ]
+    },
+    {
+      name: '', labelLat: 54, labelLon: -2, // Reino Unido e Irlanda
+      coords: [[-6,50],[-5,54],[-6,58],[-2,58],[0,53],[1.5,51.2],[-2,50.5],[-6,50]]
+    },
+    {
+      name: 'ÁFRICA', labelLat: 6, labelLon: 20,
+      coords: [
+        [-6,35.8],[3,36.8],[10.5,37],[11,33],[20,32],[32,31.5],[34,28],[39,20],[43,12],[51,11.5],
+        [49,5],[41,-2],[40,-11],[35,-20],[32,-28],[26,-33.8],[18.5,-34.2],[15,-26],[12,-16],[13,-6],
+        [9,4],[4,6.4],[-2,5],[-8,4.5],[-13,9],[-17,14.8],[-17,21],[-13,27],[-9,31],[-6,35.8]
+      ]
+    },
+    {
+      name: '', labelLat: -19, labelLon: 46.5, // Madagascar
+      coords: [[44,-25],[43.5,-16],[49,-12.5],[50,-16],[47,-25],[44,-25]]
+    },
+    {
+      name: 'ASIA', labelLat: 42, labelLon: 92,
+      coords: [
+        [26,40],[36,37],[35,31],[39,21],[44,13],[54,17],[59,22.5],[50,27],[49,30],[56,26],[62,25],
+        [68,23],[73,19],[77,8.2],[80,13],[85,19],[90,22],[95,16],[98,8],[103,1.5],[104,4],[102,12],
+        [108,12],[109,18],[107,21],[114,22.5],[120,25],[122,31],[120,36],[122,40],[126,38],[129,35],
+        [130,38],[132,43],[140,46],[142,54],[150,59],[162,60],[160,52],[156,51],[158,56],[170,60],
+        [178,66],[160,70],[135,72],[105,74],[80,72],[60,68],[60,60],[52,46],[40,44],[28,41],[26,40]
+      ]
+    },
+    {
+      name: '', labelLat: 36, labelLon: 138, // Japón
+      coords: [[130,31],[131,34],[136,34.5],[140,35.5],[141.5,41],[145,43.5],[141,45],[139,39],[135,35.5],[130,31]]
+    },
+    {
+      name: '', labelLat: -2, labelLon: 112, // Indonesia / Borneo / Sumatra
+      coords: [[96,5],[104,-1],[106,-6],[114,-8],[115,-4],[118,3],[112,3],[104,1],[96,5]]
+    },
+    {
+      name: 'OCEANÍA', labelLat: -25, labelLon: 134, // Australia
+      coords: [
+        [114,-22],[122,-17],[130,-12],[136,-12],[138,-16],[142,-11],[146,-17],[150,-22],[153.5,-28],
+        [151,-34],[147,-38.5],[140,-38],[136,-35],[130,-32],[122,-34],[115,-34],[114,-26],[114,-22]
+      ]
+    },
+    {
+      name: '', labelLat: -41, labelLon: 173, // Nueva Zelanda
+      coords: [[167,-46],[172,-41],[178,-37],[175,-42],[170,-46],[167,-46]]
+    }
   ];
+
+  // Subdividir aristas de polígonos cada ~3° para que las costas se curven suavemente sobre la esfera 3D
+  function subdividePolygon(coords, maxStep = 3.0) {
+    const out = [];
+    for (let i = 0; i < coords.length - 1; i++) {
+      const [lon1, lat1] = coords[i];
+      const [lon2, lat2] = coords[i + 1];
+      const dist = Math.hypot(lon2 - lon1, lat2 - lat1);
+      const steps = Math.max(1, Math.ceil(dist / maxStep));
+      for (let s = 0; s < steps; s++) {
+        const t = s / steps;
+        out.push([lon1 + (lon2 - lon1) * t, lat1 + (lat2 - lat1) * t]);
+      }
+    }
+    return out;
+  }
+
+  const WORLD_CONTINENTS = RAW_CONTINENTS.map(c => ({
+    ...c,
+    subCoords: subdividePolygon(c.coords, 2.8)
+  }));
+
+  // Algoritmo Point-in-Polygon para rellenar el interior real de los continentes con puntos de textura
+  function pointInPoly(lon, lat, poly) {
+    let inside = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const xi = poly[i][0], yi = poly[i][1];
+      const xj = poly[j][0], yj = poly[j][1];
+      const intersect = ((yi > lat) !== (yj > lat)) &&
+        (lon < (xj - xi) * (lat - yi) / ((yj - yi) || 1e-9) + xi);
+      if (intersect) inside = !inside;
+    }
+    return inside;
+  }
 
   const LAND_DOTS = [];
-  CONTINENT_PATCHES.forEach(p => {
-    for (let lat = p.latMin; lat <= p.latMax; lat += p.step) {
-      for (let lon = p.lonMin; lon <= p.lonMax; lon += p.step) {
-        // Pequeña máscara pseudoaleatoria determinista para dar silueta orgánica
-        const mask = Math.sin(lat * 0.23 + lon * 0.17) + Math.cos(lat * 0.11 - lon * 0.29);
-        if (mask > -0.35) {
-          LAND_DOTS.push({
-            lat: lat + Math.sin(lon) * 1.4,
-            lon: lon + Math.cos(lat) * 1.4
-          });
+  for (let lat = -54; lat <= 72; lat += 4.2) {
+    for (let lon = -168; lon <= 178; lon += 4.5) {
+      for (let c = 0; c < RAW_CONTINENTS.length; c++) {
+        if (pointInPoly(lon, lat, RAW_CONTINENTS[c].coords)) {
+          LAND_DOTS.push({ lat, lon });
+          break;
         }
       }
     }
-  });
+  }
 
   // Ejemplos de ventas con ganancia neta del cliente para los cartelitos flotantes
   const SALE_EVENTS = [
     { amount: 148.50, label: 'Venta Amazon FBA · Neto' },
     { amount: 77.70,  label: 'Pack 10 uds. · Margen 46.6%' },
     { amount: 312.40, label: 'Sponsored Products · ROAS 12.5x' },
-    { amount: 94.20,  label: ' Pedido Prime · Ganancia cliente' },
+    { amount: 94.20,  label: 'Pedido Prime · Ganancia cliente' },
     { amount: 215.00, label: 'Brand Store · Carrito directo' },
     { amount: 63.80,  label: 'Funda iPhone 16PM · +$7.77/ud' },
     { amount: 428.90, label: 'Recompra B2B · Margen neto' },
@@ -1387,14 +1484,44 @@ body.agent [data-agent]::before {
     return { x: x0, y, z };
   }
 
-  // Función que dibuja un Mundo 3D completo en cualquier contexto 2D en (cx, cy) con radio R
+  // Dibuja un polígono de continente proyectado en la esfera (con recorte suave en el horizonte 3D)
+  function traceSphericalPolygon(ctx, subCoords, rotY, rotX, cx, cy, R, frontHemisphere) {
+    let visibleCount = 0;
+    const pts = subCoords.map(([lon, lat]) => {
+      const p = projectLatLon(lat, lon, rotY, rotX);
+      if (frontHemisphere ? p.z > -0.05 : p.z < 0.05) visibleCount++;
+      return p;
+    });
+    if (visibleCount < 3) return false;
+
+    ctx.beginPath();
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
+      let px = p.x;
+      let py = p.y;
+      if (frontHemisphere && p.z < 0) {
+        // Si el vértice dobla detrás del horizonte, proyectarlo al borde de la esfera
+        const mag = Math.hypot(px, py) || 1;
+        px = px / mag;
+        py = py / mag;
+      }
+      const sx = cx + px * R;
+      const sy = cy + py * R;
+      if (i === 0) ctx.moveTo(sx, sy);
+      else ctx.lineTo(sx, sy);
+    }
+    ctx.closePath();
+    return true;
+  }
+
+  // Función que dibuja un Mundo 3D completo con continentes, puntos y conexiones saltando
   function renderGlobeInstance(ctx, state, cx, cy, R, dt, isHero) {
     ctx.save();
 
     // 1. Halo atmosférico exterior esmeralda y ámbar
     const outerGlow = ctx.createRadialGradient(cx, cy, R * 0.72, cx, cy, R * 1.48);
-    outerGlow.addColorStop(0, 'rgba(46, 204, 113, 0.22)');
-    outerGlow.addColorStop(0.55, 'rgba(56, 189, 248, 0.11)');
+    outerGlow.addColorStop(0, 'rgba(46, 204, 113, 0.24)');
+    outerGlow.addColorStop(0.55, 'rgba(56, 189, 248, 0.12)');
     outerGlow.addColorStop(0.8, 'rgba(250, 180, 18, 0.06)');
     outerGlow.addColorStop(1, 'rgba(5, 7, 14, 0)');
     ctx.fillStyle = outerGlow;
@@ -1406,11 +1533,11 @@ body.agent [data-agent]::before {
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(state.rotY * 0.35);
-    ctx.strokeStyle = 'rgba(46, 204, 113, 0.28)';
+    ctx.strokeStyle = 'rgba(46, 204, 113, 0.26)';
     ctx.lineWidth = isHero ? 1.3 : 1;
     ctx.setLineDash([6, 8]);
     ctx.beginPath();
-    ctx.ellipse(0, 0, R * 1.18, R * 0.38, -0.28, 0, Math.PI * 2);
+    ctx.ellipse(0, 0, R * 1.18, R * 0.36, -0.26, 0, Math.PI * 2);
     ctx.stroke();
     ctx.restore();
 
@@ -1419,30 +1546,38 @@ body.agent [data-agent]::before {
       cx - R * 0.32, cy - R * 0.32, R * 0.08,
       cx, cy, R
     );
-    sphereGrad.addColorStop(0, '#13284C');
-    sphereGrad.addColorStop(0.55, '#091326');
-    sphereGrad.addColorStop(0.92, '#040812');
-    sphereGrad.addColorStop(1, '#020409');
+    sphereGrad.addColorStop(0, '#0F2547');
+    sphereGrad.addColorStop(0.55, '#07142B');
+    sphereGrad.addColorStop(0.92, '#040915');
+    sphereGrad.addColorStop(1, '#02050B');
     ctx.fillStyle = sphereGrad;
     ctx.beginPath();
     ctx.arc(cx, cy, R, 0, Math.PI * 2);
     ctx.fill();
 
-    // Borde brillante del planeta
-    ctx.strokeStyle = 'rgba(46, 204, 113, 0.55)';
-    ctx.lineWidth = isHero ? 2 : 1.5;
-    ctx.stroke();
+    // Recortar (clip) todo el mapa continental y meridianos al círculo de la esfera
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, R - 0.5, 0, Math.PI * 2);
+    ctx.clip();
 
-    // 4. Meridianos y paralelos 3D
-    ctx.lineWidth = 0.75;
-    ctx.strokeStyle = 'rgba(56, 189, 248, 0.13)';
-    // Meridianos
+    // 3b. Continentes en la cara trasera del planeta (tenues para dar efecto de globo translúcido 3D)
+    WORLD_CONTINENTS.forEach(cont => {
+      if (traceSphericalPolygon(ctx, cont.subCoords, state.rotY, state.rotX, cx, cy, R, false)) {
+        ctx.fillStyle = 'rgba(32, 177, 90, 0.05)';
+        ctx.fill();
+      }
+    });
+
+    // 4. Meridianos y paralelos 3D sobre el océano
+    ctx.lineWidth = 0.7;
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.14)';
     for (let lon = -150; lon <= 180; lon += 30) {
       ctx.beginPath();
       let started = false;
-      for (let lat = -80; lat <= 80; lat += 10) {
+      for (let lat = -80; lat <= 80; lat += 8) {
         const p = projectLatLon(lat, lon, state.rotY, state.rotX);
-        if (p.z > -0.05) {
+        if (p.z > -0.03) {
           const sx = cx + p.x * R;
           const sy = cy + p.y * R;
           if (!started) { ctx.moveTo(sx, sy); started = true; }
@@ -1453,13 +1588,12 @@ body.agent [data-agent]::before {
       }
       ctx.stroke();
     }
-    // Paralelos
     for (let lat = -60; lat <= 60; lat += 30) {
       ctx.beginPath();
       let started = false;
-      for (let lon = -180; lon <= 180; lon += 10) {
+      for (let lon = -180; lon <= 180; lon += 8) {
         const p = projectLatLon(lat, lon, state.rotY, state.rotX);
-        if (p.z > -0.05) {
+        if (p.z > -0.03) {
           const sx = cx + p.x * R;
           const sy = cy + p.y * R;
           if (!started) { ctx.moveTo(sx, sy); started = true; }
@@ -1471,22 +1605,60 @@ body.agent [data-agent]::before {
       ctx.stroke();
     }
 
-    // 5. Puntos de continentes (cara trasera tenue + cara frontal luminosa)
+    // 5. CONTINENTES EN LA CARA FRONTAL (Relleno terrestre + Costa brillante definida)
+    const landGrad = ctx.createLinearGradient(cx - R, cy - R, cx + R, cy + R);
+    landGrad.addColorStop(0, 'rgba(32, 177, 90, 0.44)');
+    landGrad.addColorStop(0.5, 'rgba(20, 118, 86, 0.48)');
+    landGrad.addColorStop(1, 'rgba(250, 180, 18, 0.28)');
+
+    WORLD_CONTINENTS.forEach(cont => {
+      if (traceSphericalPolygon(ctx, cont.subCoords, state.rotY, state.rotX, cx, cy, R, true)) {
+        ctx.fillStyle = landGrad;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(46, 204, 113, 0.85)';
+        ctx.lineWidth = isHero ? 1.5 : 1.1;
+        ctx.stroke();
+      }
+    });
+
+    // Textura de puntos interiores sobre los continentes
     for (let i = 0; i < LAND_DOTS.length; i++) {
       const d = LAND_DOTS[i];
       const p = projectLatLon(d.lat, d.lon, state.rotY, state.rotX);
-      if (p.z < -0.25) continue;
+      if (p.z <= 0.04) continue;
       const sx = cx + p.x * R;
       const sy = cy + p.y * R;
-      const alpha = p.z > 0 ? 0.18 + p.z * 0.45 : 0.06;
-      const dotR = (isHero ? 1.7 : 1.2) * (p.z > 0 ? (0.75 + p.z * 0.4) : 0.6);
-      ctx.fillStyle = `rgba(56, 189, 248, ${alpha.toFixed(2)})`;
+      ctx.fillStyle = `rgba(167, 243, 208, ${(0.22 + p.z * 0.35).toFixed(2)})`;
       ctx.beginPath();
-      ctx.arc(sx, sy, dotR, 0, Math.PI * 2);
+      ctx.arc(sx, sy, isHero ? 1.35 : 0.95, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    // 6. Proyección de los nodos de ventas (Marketplaces)
+    // Etiquetas de nombres de Continentes cuando están de frente (en el Hero)
+    if (isHero) {
+      ctx.font = '700 9px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center';
+      WORLD_CONTINENTS.forEach(cont => {
+        if (!cont.name) return;
+        const cp = projectLatLon(cont.labelLat, cont.labelLon, state.rotY, state.rotX);
+        if (cp.z > 0.35) {
+          ctx.fillStyle = `rgba(226, 232, 240, ${(cp.z * 0.45).toFixed(2)})`;
+          ctx.fillText(cont.name, cx + cp.x * R, cy + cp.y * R);
+        }
+      });
+      ctx.textAlign = 'left';
+    }
+
+    ctx.restore(); // Fin del clip esférico
+
+    // Borde brillante del planeta
+    ctx.strokeStyle = 'rgba(46, 204, 113, 0.65)';
+    ctx.lineWidth = isHero ? 2.2 : 1.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // 6. Proyección de los nodos de ventas (Marketplaces ubicados en cada continente)
     const projectedNodes = MARKET_NODES.map((n, idx) => {
       const p = projectLatLon(n.lat, n.lon, state.rotY, state.rotX);
       return {
@@ -1500,41 +1672,71 @@ body.agent [data-agent]::before {
       };
     });
 
-    // Dibujar nodos visibles y sus anillos radar de marcación
-    projectedNodes.forEach(n => {
-      if (n.z < -0.15) return;
-      const visAlpha = Math.max(0.2, Math.min(1, (n.z + 0.2) / 0.9));
-      const baseR = (isHero ? (n.hub ? 5.2 : 3.8) : (n.hub ? 3.8 : 2.8));
+    // Identificar qué nodos están actualmente enviando o recibiendo un salto de venta
+    const activeFromSet = new Set();
+    const activeToSet = new Set();
+    state.arcs.forEach(a => {
+      activeFromSet.add(a.fromIdx);
+      activeToSet.add(a.toIdx);
+    });
 
-      // Pulso radar continuo en cada nodo activo
-      const pulsePhase = (state.time * 1.6 + n.idx * 0.47) % 1;
-      const pulseR = baseR + pulsePhase * (isHero ? 16 : 11);
+    // Dibujar nodos visibles y sus anillos radar de marcación sobre los continentes
+    projectedNodes.forEach(n => {
+      if (n.z < -0.08) return;
+      const visAlpha = Math.max(0.25, Math.min(1, (n.z + 0.1) / 0.85));
+      const isJumping = activeFromSet.has(n.idx) || activeToSet.has(n.idx);
+      const baseR = (isHero ? (n.hub ? 5.6 : 4.2) : (n.hub ? 4.0 : 3.0)) * (isJumping ? 1.22 : 1);
+
+      // Pulso radar continuo en cada punto del mapa
+      const pulsePhase = (state.time * 1.65 + n.idx * 0.47) % 1;
+      const pulseR = baseR + pulsePhase * (isHero ? 18 : 12);
       ctx.strokeStyle = n.color === '#2ECC71'
-        ? `rgba(46, 204, 113, ${(1 - pulsePhase) * 0.65 * visAlpha})`
-        : `rgba(250, 180, 18, ${(1 - pulsePhase) * 0.65 * visAlpha})`;
-      ctx.lineWidth = 1.4;
+        ? `rgba(46, 204, 113, ${(1 - pulsePhase) * 0.75 * visAlpha})`
+        : `rgba(250, 180, 18, ${(1 - pulsePhase) * 0.75 * visAlpha})`;
+      ctx.lineWidth = isJumping ? 2.0 : 1.4;
       ctx.beginPath();
       ctx.arc(n.x, n.y, pulseR, 0, Math.PI * 2);
       ctx.stroke();
 
-      // Punto central brillante
+      // Si el punto es destino activo de un salto, dibujar diana receptora
+      if (activeToSet.has(n.idx)) {
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 1.3;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, baseR + 4, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Punto central brillante con halo
       ctx.fillStyle = n.color;
       ctx.shadowColor = n.color;
-      ctx.shadowBlur = isHero ? 10 : 6;
+      ctx.shadowBlur = isHero ? 12 : 7;
       ctx.beginPath();
       ctx.arc(n.x, n.y, baseR, 0, Math.PI * 2);
       ctx.fill();
       ctx.shadowBlur = 0;
 
-      // Etiqueta de ciudad en los hubs visibles de frente
-      if (n.z > 0.32 && (isHero || n.hub)) {
-        ctx.font = `${isHero ? '600 10px' : '600 8.5px'} "JetBrains Mono", monospace`;
-        ctx.fillStyle = `rgba(255, 255, 255, ${(visAlpha * 0.85).toFixed(2)})`;
-        ctx.fillText(n.id, n.x + baseR + 4, n.y + 3);
+      // Núcleo blanco para máxima nitidez sobre el continente
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, baseR * 0.42, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Etiqueta clara de la ciudad sobre el continente
+      if (n.z > 0.18 && (isHero || n.hub || isJumping)) {
+        const lbl = isHero ? `${n.id}·${n.name.split(' ')[0]}` : n.id;
+        ctx.font = `700 ${isHero ? 9.5 : 8}px "JetBrains Mono", monospace`;
+        const tw = ctx.measureText(lbl).width;
+        const lx = n.x + baseR + 4;
+        const ly = n.y - (isHero ? 6 : 5);
+        ctx.fillStyle = 'rgba(5, 7, 14, 0.82)';
+        ctx.fillRect(lx - 2, ly - 2, tw + 4, isHero ? 12 : 10);
+        ctx.fillStyle = isJumping ? '#FAB412' : `rgba(255, 255, 255, ${(visAlpha * 0.95).toFixed(2)})`;
+        ctx.fillText(lbl, lx, ly + (isHero ? 7.5 : 6.5));
       }
     });
 
-    // 7. Arcos de conexión (ventas en tránsito entre puntos del mundo)
+    // 7. Arcos de conexión (ventas saltando de un punto/continente a otro)
     for (let i = state.arcs.length - 1; i >= 0; i--) {
       const arc = state.arcs[i];
       arc.progress += dt * arc.speed;
@@ -1542,34 +1744,37 @@ body.agent [data-agent]::before {
       const fromNode = projectedNodes[arc.fromIdx];
       const toNode = projectedNodes[arc.toIdx];
 
-      if (fromNode && toNode && (fromNode.z > -0.25 || toNode.z > -0.25)) {
-        // Punto medio elevado hacia afuera de la esfera para simular arco 3D
+      if (fromNode && toNode && (fromNode.z > -0.2 || toNode.z > -0.2)) {
+        // Punto medio elevado hacia afuera de la esfera para que se vea claramente el salto entre continentes
         const midX = (fromNode.x + toNode.x) * 0.5;
         const midY = (fromNode.y + toNode.y) * 0.5;
         const dx = midX - cx;
         const dy = midY - cy;
         const dist = Math.hypot(fromNode.x - toNode.x, fromNode.y - toNode.y);
         const norm = Math.hypot(dx, dy) || 1;
-        const lift = Math.min(R * 0.55, dist * 0.48);
+        const lift = Math.min(R * 0.62, dist * 0.54);
         const ctrlX = midX + (dx / norm) * lift;
-        const ctrlY = midY - Math.abs(dy / norm) * lift * 0.55 - lift * 0.45;
+        const ctrlY = midY - Math.abs(dy / norm) * lift * 0.55 - lift * 0.48;
 
-        // Estela completa tenue del arco
-        ctx.strokeStyle = 'rgba(250, 180, 18, 0.22)';
-        ctx.lineWidth = isHero ? 1.4 : 1.1;
+        // Trayectoria punteada completa del salto entre los dos puntos
+        ctx.save();
+        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = 'rgba(250, 180, 18, 0.35)';
+        ctx.lineWidth = isHero ? 1.5 : 1.1;
         ctx.beginPath();
         ctx.moveTo(fromNode.x, fromNode.y);
         ctx.quadraticCurveTo(ctrlX, ctrlY, toNode.x, toNode.y);
         ctx.stroke();
+        ctx.restore();
 
-        // Segmento activo iluminado de la venta viajando
-        const t1 = Math.max(0, arc.progress - 0.28);
+        // Estela activa luminosa de la venta saltando
+        const t1 = Math.max(0, arc.progress - 0.34);
         const t2 = Math.min(1, arc.progress);
-        const steps = 12;
+        const steps = 14;
         ctx.strokeStyle = arc.color;
-        ctx.lineWidth = isHero ? 2.6 : 2.0;
+        ctx.lineWidth = isHero ? 3.0 : 2.2;
         ctx.shadowColor = arc.color;
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = 10;
         ctx.beginPath();
         for (let s = 0; s <= steps; s++) {
           const t = t1 + (t2 - t1) * (s / steps);
@@ -1582,22 +1787,34 @@ body.agent [data-agent]::before {
         ctx.stroke();
         ctx.shadowBlur = 0;
 
-        // Cabeza luminosa del paquete de venta
+        // Cabeza luminosa del paquete de venta en pleno salto
         const tHead = Math.min(1, arc.progress);
         const invH = 1 - tHead;
         const hx = invH * invH * fromNode.x + 2 * invH * tHead * ctrlX + tHead * tHead * toNode.x;
         const hy = invH * invH * fromNode.y + 2 * invH * tHead * ctrlY + tHead * tHead * toNode.y;
 
         ctx.fillStyle = '#FFFFFF';
+        ctx.shadowColor = '#FFFFFF';
+        ctx.shadowBlur = 8;
         ctx.beginPath();
-        ctx.arc(hx, hy, isHero ? 3.6 : 2.8, 0, Math.PI * 2);
+        ctx.arc(hx, hy, isHero ? 4.2 : 3.2, 0, Math.PI * 2);
         ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Etiqueta en vuelo mostrando de qué punto a qué punto salta (ej. "MIA ➔ MAD")
+        if (isHero && tHead > 0.15 && tHead < 0.85) {
+          const routeLbl = `${fromNode.id}➔${toNode.id}`;
+          ctx.font = '700 8.5px "JetBrains Mono", monospace';
+          ctx.fillStyle = '#FAB412';
+          ctx.fillText(routeLbl, hx + 6, hy - 5);
+        }
       }
 
-      // Cuando la conexión llega al nodo destino -> estalla un cartelito de ganancia para el cliente
+      // Cuando la conexión aterriza en el nodo destino -> estalla el cartelito con ruta y ganancia del cliente
       if (arc.progress >= 1) {
         if (toNode && toNode.z > -0.15) {
-          spawnProfitBadge(state, toNode.x, toNode.y, toNode.id, arc.sale);
+          const routeStr = fromNode ? `${fromNode.id}➔${toNode.id}` : toNode.id;
+          spawnProfitBadge(state, toNode.x, toNode.y, routeStr, arc.sale);
         }
         state.arcs.splice(i, 1);
       }
