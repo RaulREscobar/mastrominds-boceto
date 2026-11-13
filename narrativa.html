@@ -2478,5 +2478,41 @@
       initHeroAndShowcase();
     }
   </script>
+<!-- MM-VERSION-SWITCHER-START -->
+<style>
+  .mm-ver-nav {
+    position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+    z-index: 99999; display: flex; align-items: center; gap: 4px;
+    padding: 5px 8px; border-radius: 999px;
+    background: rgba(5, 7, 14, 0.92); backdrop-filter: blur(14px);
+    border: 1px solid rgba(250, 180, 18, 0.45);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.75), 0 0 20px rgba(250, 103, 17, 0.2);
+    font-family: 'Inter', system-ui, sans-serif; font-size: 12px;
+  }
+  .mm-ver-nav a {
+    color: #94A3B8; text-decoration: none; font-weight: 600;
+    padding: 5px 11px; border-radius: 999px; transition: all 0.18s ease;
+    white-space: nowrap;
+  }
+  .mm-ver-nav a:hover { color: #FFF; background: rgba(255,255,255,0.08); }
+  .mm-ver-nav a.mm-home { color: #FAB412; font-weight: 700; border-right: 1px solid rgba(255,255,255,0.12); border-radius: 999px 0 0 999px; padding-right: 12px; }
+  .mm-ver-nav a.mm-active {
+    background: linear-gradient(135deg, #FAB412, #FA6711);
+    color: #000 !important; font-weight: 800;
+  }
+  @media (max-width: 640px) {
+    .mm-ver-nav { top: auto; bottom: 70px; font-size: 11px; padding: 4px 6px; }
+    .mm-ver-nav a { padding: 4px 8px; }
+  }
+</style>
+<nav class="mm-ver-nav" id="mm-ver-nav" aria-label="Selector de versiones del boceto">
+  <a href="index.html" class="mm-home">🏠 Inicio</a>
+  <a href="v0-index.html" class="mm-active">V0 · Original</a>
+  <a href="conceptos-visuales.html" class="">V1 · Conceptos</a>
+  <a href="astro-v2.html" class="">V2 · Agujero Negro</a>
+  <a href="astro-v3.html" class="">V3 · Recorrido $1</a>
+</nav>
+<script>if(window.self!==window.top){var n=document.getElementById('mm-ver-nav');if(n)n.style.display='none';}</script>
+<!-- MM-VERSION-SWITCHER-END -->
 </body>
 </html>

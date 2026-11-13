@@ -1,20 +1,22 @@
 # Bocetos Interactivos · Mastro Minds NYC
 
-Carpeta de bocetos interactivos de alta fidelidad para el nuevo sitio web de Mastro Minds.
+Portal unificado con las 4 versiones interactivas del nuevo sitio web de **Mastro Minds** para revisión de Antonio y Raúl.
 
-## Archivos para abrir en el navegador
+## 🌐 Enlace Público en GitHub Pages
 
-Puedes hacer doble clic sobre cualquiera de estos archivos para abrirlos en Chrome, Edge o tu navegador preferido:
+👉 **[https://raulrescobar.github.io/mastrominds-boceto/](https://raulrescobar.github.io/mastrominds-boceto/)**
 
-1. **`index.html` (o `narrativa.html`)** — **Propuesta Flagship Principal**:
-   - **Hero con Explosión & Convergencia:** Al cargar, 4 tarjetas de datos convergen al centro y detonan hacia la periferia en micro-levitación continua (botón interactivo para re-detonar).
-   - **Carrusel Infinito:** Cinta continua de marcas aceleradas y partners oficiales con pausa al pasar el ratón.
-   - **El Paso a Paso del Crecimiento:** 4 fases interactivas con matrices de cumplimiento, comparador de conversión de listings, reglas de PPC de Ibernova y desglose real del beneficio neto por SKU.
-   - **Tabla Comparativa:** Agencia Tradicional vs. Mastro Minds (Ibernova Method).
-   - **Escáner de Auditoría 3-en-1 en Vivo:** Simulación de haz láser con logs y diagnóstico interactivo.
-   - **Sección de FAQs:** Optimizadas para posicionamiento SEO, GEO (IAs generativas) y AEO (Google Overviews).
+---
 
-2. **`conceptos-visuales.html`** — **Comparativa de 3 Estilos de Motion (Lapa Ninja)**:
-   - **Pestaña 1 (Innovación & Hero):** Estilo *darkroom.engineering* con tarjetas de luz perimetral reactiva al cursor y contadores numéricos con aceleración/desaceleración (*easing*).
-   - **Pestaña 2 (Auditoría en Vivo):** Estilo *Vivid Motion* con simulación progresiva de inspección de ASIN.
-   - **Pestaña 3 (Resultados & Comparador):** Estilo *Heyo Studios* con interruptor Antes vs. Después del caso real *Efficiency Engine*.
+## 📂 Versiones Disponibles desde la Página de Inicio (`index.html`)
+
+- **`index.html`** — **Página de Inicio / Portal de Versiones para Antonio**:
+  - Tarjetas de acceso directo a las 4 versiones (`V0`, `V1`, `V2`, `V3`) y visor interactivo integrado en la misma página.
+- **`V0` (`v0-index.html` / `narrativa.html`)** — **Propuesta Flagship Inicial**:
+  - Hero con explosión de 6 tarjetas y entrada estilo Raycast, carrusel interactivo de 4 fases, gráficos de crecimiento a 12 meses y escáner 3-en-1.
+- **`V1` (`conceptos-visuales.html`)** — **Comparativa de 3 Estilos de Motion**:
+  - Pestaña 1 (Innovación & Hero), Pestaña 2 (Auditoría en vivo por ASIN) y Pestaña 3 (Comparador Antes vs. Después).
+- **`V2` (`astro-v2.html`)** — **Singularidad: Agujero Negro con Cola Cónica & Gráficos Reales**:
+  - Paleta original de Mastro Minds (`#05070E`, `#0D1322`, `#FAB412`, `#FA6711`, `#2ECC71`), botón circular **«SELLER CENTRAL + AMAZON ADS»** con borde naranja giratorio que se transforma en un agujero negro con cola en forma de cono, absorbe la pantalla y explota con los 4 pasos de mejora; además el agujero negro acompaña suavemente el scroll de lado a lado devorando cada sección y activando gráficos con datos reales + simulación de Agente IA (WebMCP).
+- **`V3` (`astro-v3.html` / `astro-v3-recorrido-dolar.html`)** — **El Recorrido de un Dólar**:
+  - Relato en 6 capítulos siguiendo un dólar de publicidad hasta el beneficio neto, con gráficos de los casos publicados y calculadora de ACOS.
