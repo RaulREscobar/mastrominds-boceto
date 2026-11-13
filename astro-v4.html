@@ -1,0 +1,2220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mastro Minds · Boceto Astro v4 (Mundo Conectado de Ventas & Gráficos Vivos)</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* ==========================================================================
+   MASTRO MINDS · V4: MUNDO 3D CONECTADO DE VENTAS + CONTADORES Y GRÁFICOS EN MOVIMIENTO
+   Paleta Original: #05070E, #0D1322, #FAB412 (Ámbar), #FA6711 (Naranja), #2ECC71 (Verde)
+   ========================================================================== */
+:root {
+  color-scheme: dark;
+  --bg: #05070E;
+  --bg-deep: #020307;
+  --surface: #0D1322;
+  --surface-2: #161F2C;
+  --surface-3: #090D18;
+  --line: #1E293B;
+  --line-2: #26313F;
+  --fg: #FFFFFF;
+  --muted: #94A3B8;
+  --dim: #64748B;
+  --amber: #FAB412;
+  --orange: #FA6711;
+  --orange-hi: #FF6900;
+  --green: #20B15A;
+  --green-hi: #2ECC71;
+  --blue: #38BDF8;
+  --purple: #A855F7;
+  --agent: #38BDF8;
+  --paper: #F8FAFC;
+  --ink: #05070E;
+  --display: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --gut-l: max(20px, env(safe-area-inset-left, 0px));
+  --gut-r: max(20px, env(safe-area-inset-right, 0px));
+  --max: 1180px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 14% 10%, rgba(46, 204, 113, 0.09) 0%, transparent 40%),
+    radial-gradient(circle at 86% 20%, rgba(250, 180, 18, 0.11) 0%, transparent 44%),
+    radial-gradient(circle at 50% 72%, rgba(56, 189, 248, 0.06) 0%, transparent 50%);
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+a { color: inherit; }
+h1, h2, h3, h4 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.02em; line-height: 1.12; }
+p { margin: 0; }
+.wrap { max-width: var(--max); margin-inline: auto; padding-left: var(--gut-l); padding-right: var(--gut-r); }
+.band { padding-block: 88px; position: relative; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); font-weight: 700; display: inline-flex; align-items: center; gap: 8px; }
+.eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, var(--green-hi), var(--amber)); box-shadow: 0 0 10px var(--green-hi); }
+.h2 { font-size: clamp(28px, 4.2vw, 46px); font-weight: 800; margin-top: 12px; }
+.lead { color: var(--muted); font-size: clamp(16px, 1.5vw, 18px); max-width: 64ch; margin-top: 14px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--display); font-weight: 700; font-size: 14.5px;
+  padding: 13px 24px; border-radius: 14px; border: 1px solid transparent;
+  text-decoration: none; cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--amber) 0%, var(--orange) 100%);
+  color: #000;
+  box-shadow: 0 10px 30px -6px rgba(250, 103, 17, 0.5);
+}
+.btn-primary:hover { box-shadow: 0 14px 36px -4px rgba(250, 180, 18, 0.7); }
+.btn-ghost {
+  border-color: var(--line-2); color: var(--fg);
+  background: rgba(13, 19, 34, 0.8); backdrop-filter: blur(8px);
+}
+.btn-ghost:hover { border-color: var(--amber); color: var(--amber); }
+
+.tag { font-family: var(--mono); font-size: 11px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--muted); white-space: nowrap; font-weight: 600; }
+.tag.ok { color: var(--green-hi); border-color: rgba(46, 204, 113, 0.45); background: rgba(46, 204, 113, 0.08); }
+.tag.beta { color: var(--amber); border-color: rgba(250, 180, 18, 0.45); background: rgba(250, 180, 18, 0.10); }
+.tag.orange { color: #FF8A4C; border-color: rgba(250, 103, 17, 0.55); background: rgba(250, 103, 17, 0.12); }
+.tag.todo { color: var(--agent); border-color: rgba(56, 189, 248, 0.45); background: rgba(56, 189, 248, 0.08); }
+.num { font-family: var(--display); font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.03em; }
+
+.shimmer-text {
+  background: linear-gradient(90deg, #2ECC71 0%, #FAB412 35%, #FFF2CC 55%, #FA6711 80%, #2ECC71 100%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: textShimmer 6s linear infinite;
+}
+@keyframes textShimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+/* ---------- Barra superior de boceto ---------- */
+.sketchbar { background: var(--surface-3); border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--muted); position: relative; z-index: 45; }
+.sketchbar .wrap { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; padding-block: 8px; }
+.sketchbar b { color: var(--green-hi); font-weight: 700; }
+
+/* ---------- Cabecera Principal ---------- */
+header.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 45;
+  background: rgba(5, 7, 14, 0.88); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+header.nav .wrap { display: flex; align-items: center; gap: 20px; padding-block: 12px; }
+.brand-logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; shrink: 0; }
+.brand-logo svg { height: 42px; width: auto; display: block; }
+header.nav nav { display: flex; gap: 20px; margin-left: auto; font-size: 13.5px; font-weight: 500; }
+header.nav nav a { text-decoration: none; color: var(--muted); transition: color 0.15s; }
+header.nav nav a:hover { color: var(--amber); }
+.lang { font-family: var(--mono); font-size: 12px; color: var(--dim); }
+.lang b { color: var(--amber); }
+.globe-trigger-nav {
+  font-family: var(--mono); font-size: 11.5px; font-weight: 700;
+  padding: 8px 13px; border-radius: 10px; cursor: pointer;
+  background: rgba(46, 204, 113, 0.14); color: var(--green-hi);
+  border: 1px solid rgba(46, 204, 113, 0.5);
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: all 0.2s;
+}
+.globe-trigger-nav:hover { background: rgba(46, 204, 113, 0.28); border-color: var(--amber); color: #fff; transform: scale(1.03); }
+@media (max-width: 960px) { header.nav nav, .lang { display: none; } header.nav .btn-primary { padding: 10px 15px; font-size: 13px; } }
+
+/* ---------- Canvas Global del Mundo Acompañante ---------- */
+#globe-companion-canvas {
+  position: fixed; inset: 0; width: 100vw; height: 100vh;
+  pointer-events: none; z-index: 38; display: block;
+}
+
+/* ---------- HUD Flotante del Mundo de Ventas ---------- */
+.globe-hud {
+  position: fixed; left: max(16px, env(safe-area-inset-left, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 50; display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; border-radius: 18px;
+  background: rgba(9, 13, 24, 0.92);
+  border: 1px solid rgba(46, 204, 113, 0.55);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(46, 204, 113, 0.22);
+  backdrop-filter: blur(16px); font-size: 12px;
+}
+.globe-hud-orb {
+  width: 36px; height: 36px; border-radius: 50%; position: relative;
+  background: radial-gradient(circle at 35% 35%, #1E3A8A, #05070E);
+  border: 1.5px solid var(--green-hi);
+  display: grid; place-items: center; cursor: pointer;
+  box-shadow: 0 0 16px rgba(46, 204, 113, 0.5);
+}
+.globe-hud-info { display: grid; gap: 2px; }
+.globe-hud-title { font-family: var(--mono); font-size: 10.5px; color: var(--green-hi); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+.globe-hud-sub { font-size: 12px; font-weight: 700; color: var(--fg); font-variant-numeric: tabular-nums; }
+.globe-hud-btn {
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  padding: 7px 11px; border-radius: 10px; border: 1px solid rgba(250, 180, 18, 0.5);
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(250, 180, 18, 0.22));
+  color: var(--amber); cursor: pointer; transition: all 0.2s;
+}
+.globe-hud-btn:hover { background: linear-gradient(135deg, var(--green-hi), var(--amber)); color: #000; }
+@media (max-width: 680px) { .globe-hud-sub { display: none; } }
+
+/* ---------- HERO PRINCIPAL CON EL MUNDO 3D CONECTADO DE VENTAS ---------- */
+.hero {
+  position: relative; overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  min-height: 760px; display: flex; align-items: center;
+  background:
+    radial-gradient(ellipse at 72% 50%, rgba(46, 204, 113, 0.14) 0%, rgba(56, 189, 248, 0.08) 38%, transparent 70%),
+    linear-gradient(180deg, #080C18 0%, #05070E 100%);
+}
+.hero .wrap {
+  position: relative; z-index: 4; width: 100%;
+  padding-block: 60px 76px;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  gap: 40px; align-items: center;
+}
+.hero h1 { font-size: clamp(36px, 5.4vw, 66px); font-weight: 900; margin-top: 16px; }
+.hero .lead { font-size: clamp(16px, 1.55vw, 18.5px); color: #CBD5E1; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.hero .fine { margin-top: 16px; font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+
+/* Tarjetas de KPI del Hero debajo del texto con contadores animados */
+.hero-kpis {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px; margin-top: 28px;
+}
+.hkpi {
+  background: rgba(13, 19, 34, 0.88); border: 1px solid var(--line-2);
+  border-radius: 14px; padding: 12px 14px; backdrop-filter: blur(8px);
+  border-top: 2px solid var(--amber);
+}
+.hkpi:nth-child(1) { border-top-color: var(--green-hi); }
+.hkpi:nth-child(3) { border-top-color: var(--orange); }
+.hkpi:nth-child(4) { border-top-color: var(--blue); }
+.hkpi .num { font-size: clamp(20px, 2.2vw, 26px); display: block; color: #fff; }
+.hkpi:nth-child(1) .num { color: var(--green-hi); }
+.hkpi:nth-child(2) .num { color: var(--amber); }
+.hkpi span { font-size: 11.5px; color: var(--muted); display: block; margin-top: 2px; line-height: 1.3; }
+@media (max-width: 680px) { .hero-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Escenario Derecho: Mundo 3D Interactivo con Puntos de Conexión y Cartelitos de Ganancia */
+.globe-stage {
+  position: relative; aspect-ratio: 1 / 1; max-width: 540px; width: 100%;
+  margin-inline: auto; display: grid; place-items: center;
+}
+#hero-globe-canvas {
+  width: 100%; height: 100%; display: block; cursor: grab;
+}
+#hero-globe-canvas:active { cursor: grabbing; }
+.globe-live-pill {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  background: rgba(9, 13, 24, 0.92); border: 1px solid rgba(46, 204, 113, 0.45);
+  padding: 8px 16px; border-radius: 999px; display: flex; align-items: center; gap: 12px;
+  font-family: var(--mono); font-size: 12px; white-space: nowrap;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.75);
+}
+.globe-live-pill b { color: var(--green-hi); font-size: 14px; }
+@media (max-width: 920px) { .hero-grid { grid-template-columns: 1fr; } .globe-stage { max-width: 440px; } }
+
+/* ---------- Cabecera de sección con botón de re-animación ---------- */
+.section-anim-bar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 14px;
+}
+.reanim-btn {
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  background: rgba(46, 204, 113, 0.12); color: var(--green-hi);
+  border: 1px dashed rgba(46, 204, 113, 0.55);
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: all 0.2s;
+}
+.reanim-btn:hover { background: rgba(46, 204, 113, 0.25); color: #fff; border-style: solid; }
+
+/* ---------- Cinta de Canales ---------- */
+.rail { border-bottom: 1px solid var(--line); background: var(--surface-3); position: relative; z-index: 5; }
+.rail .wrap { display: flex; flex-wrap: wrap; gap: 10px 28px; align-items: center; padding-block: 16px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.rail b { color: var(--fg); font-weight: 600; }
+.rail i { font-style: normal; color: var(--green-hi); }
+
+/* ---------- SECCIÓN RESULTADOS Y GRÁFICOS EN MOVIMIENTO ---------- */
+.cases { display: grid; grid-template-columns: minmax(0, 1.28fr) minmax(0, 1fr); gap: 20px; margin-top: 38px; }
+.case {
+  border: 1px solid var(--line-2); border-radius: 20px;
+  background: linear-gradient(165deg, var(--surface) 0%, #090E1A 100%);
+  padding: 24px; min-width: 0; display: flex; flex-direction: column; gap: 16px;
+  box-shadow: 0 14px 34px -12px rgba(0, 0, 0, 0.7);
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+.case:hover { border-color: rgba(46, 204, 113, 0.5); }
+.case h3 { font-size: 22px; font-weight: 800; }
+.case .meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+.spec { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+.spec div { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.spec div:nth-child(odd) { padding-right: 12px; }
+.spec .num { font-size: 25px; color: var(--amber); display: block; }
+.spec div:first-child .num { color: var(--green-hi); }
+.spec span { font-size: 12.5px; color: var(--muted); }
+.case.big .spec { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.case.big .spec div { padding-right: 10px; }
+.shot { background: var(--paper); border-radius: 12px; padding: 10px; margin: 0; }
+.shot img { display: block; width: 100%; height: auto; border-radius: 6px; }
+.shot figcaption { font-size: 12px; color: #334155; margin-top: 6px; font-style: italic; }
+.case-col { display: grid; gap: 20px; min-width: 0; }
+.case p.t { color: var(--muted); font-size: 14.5px; }
+
+/* Cajas de Gráficos Vivos */
+.chart-box {
+  background: rgba(5, 7, 14, 0.78); border: 1px solid var(--line);
+  border-radius: 14px; padding: 14px 16px; position: relative; overflow: hidden;
+}
+.chart-box-head {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 10px;
+}
+
+/* Barras que se cargan de 0 a su ancho real con brillo en movimiento */
+.bar-track { height: 11px; background: #161F2C; border-radius: 999px; overflow: hidden; margin-top: 6px; position: relative; }
+.bar-fill {
+  height: 100%; border-radius: 999px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--amber), var(--orange), #FFF3C4, var(--amber));
+  background-size: 200% 100%;
+  transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: barShimmer 3s linear infinite;
+}
+.bar-fill.green {
+  background: linear-gradient(90deg, var(--green), var(--green-hi), #A7F3D0, var(--green-hi));
+  background-size: 200% 100%;
+}
+.bar-fill.blue {
+  background: linear-gradient(90deg, #2563EB, #38BDF8, #BAE6FD, #38BDF8);
+  background-size: 200% 100%;
+}
+@keyframes barShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* Curvas SVG animadas y con pulso continuo */
+.svg-curve {
+  stroke-dasharray: 900;
+  stroke-dashoffset: 900;
+  transition: stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.svg-curve.drawn { stroke-dashoffset: 0; }
+
+/* Columnas verticales que crecen y oscilan suavemente */
+.vcols {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  align-items: end; height: 92px; padding-top: 14px; border-bottom: 1px solid var(--line);
+}
+.vcol-wrap { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 4px; }
+.vcol-bar {
+  width: 100%; max-width: 28px; border-radius: 5px 5px 0 0;
+  height: 0%;
+  background: linear-gradient(180deg, var(--green-hi), var(--green));
+  transition: height 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: colPulse 3.2s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.25s);
+}
+@keyframes colPulse {
+  0%, 100% { filter: brightness(1); transform: scaleY(1); transform-origin: bottom; }
+  50% { filter: brightness(1.22); transform: scaleY(1.04); transform-origin: bottom; }
+}
+.vcol-lbl { font-family: var(--mono); font-size: 9.5px; color: var(--muted); }
+
+@media (max-width: 900px) { .cases { grid-template-columns: 1fr; } .case.big .spec { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- Servicios / Canales ---------- */
+.svc { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; margin-top: 38px; }
+.svc-main {
+  grid-column: span 12;
+  border: 1px solid rgba(250, 180, 18, 0.45);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(250, 180, 18, 0.10) 0%, rgba(46, 204, 113, 0.05) 35%, var(--surface) 75%);
+  padding: 28px;
+  display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr) minmax(0, 1fr); gap: 24px;
+}
+.svc-main h3 { font-size: 28px; }
+.plan { border: 1px solid var(--line-2); border-radius: 16px; padding: 20px; background: rgba(5, 7, 14, 0.72); min-width: 0; }
+.plan h4 { font-family: var(--display); margin: 0; font-size: 17px; color: var(--amber); }
+.plan .num { font-size: 34px; display: block; margin-top: 8px; color: #fff; }
+.plan .num small { display: block; margin-top: 4px; font-family: var(--body); font-size: 13px; font-weight: 400; color: var(--muted); letter-spacing: 0; }
+.plan ul { margin: 12px 0 0; padding: 0; list-style: none; font-size: 14px; color: var(--muted); display: grid; gap: 6px; }
+.plan li::before { content: "✓ "; color: var(--green-hi); font-family: var(--mono); font-weight: 700; }
+.svc-side { grid-column: span 4; border: 1px solid var(--line-2); border-radius: 18px; background: var(--surface); padding: 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.svc-side h3 { font-size: 19px; }
+.svc-side p { font-size: 14.5px; color: var(--muted); }
+.svc-side .tag { align-self: flex-start; margin-top: auto; }
+@media (max-width: 960px) { .svc-main { grid-template-columns: 1fr; } .svc-side { grid-column: span 12; } }
+
+/* ---------- Método (4 Fases con Gráficos Dinámicos) ---------- */
+.method { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 28px; margin-top: 38px; }
+.steps { display: grid; gap: 10px; align-content: start; }
+.steps button {
+  all: unset; box-sizing: border-box; cursor: pointer;
+  display: flex; gap: 14px; align-items: baseline; padding: 15px 18px;
+  border-radius: 14px; border: 1px solid var(--line-2); color: var(--muted);
+  font-family: var(--display); font-weight: 700; font-size: 16px;
+  background: var(--surface); transition: all 0.2s;
+}
+.steps button span { font-family: var(--mono); font-size: 12px; color: var(--dim); }
+.steps button[aria-selected="true"] {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.16), rgba(250, 180, 18, 0.14));
+  border-color: var(--green-hi); color: var(--fg);
+  box-shadow: 0 0 25px -6px rgba(46, 204, 113, 0.35);
+}
+.steps button[aria-selected="true"] span { color: var(--green-hi); }
+.panel { border: 1px solid var(--line-2); border-radius: 20px; background: var(--surface); padding: 28px; min-width: 0; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 24px; align-items: center; }
+.panel h3 { font-size: 24px; }
+.panel p { color: var(--muted); margin-top: 10px; }
+.panel ul { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+.panel li { display: flex; gap: 10px; font-size: 14.5px; }
+.panel li::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 2px; background: var(--green-hi); margin-top: 8px; }
+.panel .out { margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--line-2); font-family: var(--mono); font-size: 12.5px; color: var(--green-hi); }
+@media (max-width: 860px) { .method { grid-template-columns: 1fr; } .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } .panel { grid-template-columns: 1fr; } }
+
+/* ---------- Ibernova ---------- */
+.iber { background: var(--surface-3); border-block: 1px solid var(--line); }
+.iber-grid { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: 36px; align-items: start; margin-top: 8px; }
+.feat { display: grid; gap: 10px; margin-top: 24px; }
+.feat div { display: flex; gap: 10px; align-items: baseline; font-size: 14.5px; color: var(--muted); }
+.feat b { color: var(--fg); font-weight: 600; }
+.app {
+  border: 1px solid var(--line-2); border-radius: 18px; background: var(--bg);
+  overflow: hidden; min-width: 0;
+  box-shadow: 0 30px 80px -35px rgba(46, 204, 113, 0.25);
+}
+.app-top { display: flex; gap: 8px; align-items: center; padding: 11px 14px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--dim); background: #04060C; }
+.app-top .dot { width: 9px; height: 9px; border-radius: 50%; }
+.app-top .dot:nth-child(1) { background: #FF5F56; }
+.app-top .dot:nth-child(2) { background: #FFBD2E; }
+.app-top .dot:nth-child(3) { background: #27C93F; }
+.app-top .demo { margin-left: auto; }
+.app-tabs { display: flex; gap: 4px; padding: 10px 12px 0; overflow-x: auto; background: #070A14; }
+.app-tabs button { all: unset; cursor: pointer; font-size: 13px; padding: 8px 14px; border-radius: 8px 8px 0 0; color: var(--muted); white-space: nowrap; border: 1px solid transparent; border-bottom: 0; font-weight: 600; }
+.app-tabs button[aria-selected="true"] { color: var(--green-hi); background: var(--surface); border-color: var(--line-2); }
+.app-body { background: var(--surface); border-top: 1px solid var(--line-2); padding: 16px; overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+th { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--dim); text-align: right; padding: 6px 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+td { padding: 9px 10px; border-top: 1px solid var(--line); text-align: right; white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+td.pos { color: var(--green-hi); font-weight: 700; }
+td.neg { color: #F87171; font-weight: 700; }
+.app-note { font-size: 12.5px; color: var(--muted); padding: 12px 2px 2px; }
+@media (max-width: 900px) { .iber-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Comparativa, Reserva, FAQ, Agentes, Footer ---------- */
+.cmp { margin-top: 36px; border: 1px solid var(--line-2); border-radius: 18px; overflow-x: auto; background: var(--surface); }
+.cmp table { min-width: 620px; font-size: 15px; }
+.cmp th { font-family: var(--display); font-size: 14px; text-transform: none; letter-spacing: 0; color: var(--muted); text-align: left; padding: 16px 18px; background: rgba(5, 7, 14, 0.5); }
+.cmp th:last-child { color: var(--green-hi); }
+.cmp td { text-align: left; white-space: normal; padding: 14px 18px; color: var(--muted); }
+.cmp td:first-child { color: var(--amber); font-family: var(--mono); font-size: 12px; width: 22%; font-weight: 600; }
+.cmp td:last-child { color: var(--fg); font-weight: 500; }
+
+.book { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; margin-top: 38px; align-items: start; }
+form.card { border: 1px solid var(--line-2); border-radius: 18px; background: var(--surface); padding: 24px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; min-width: 0; }
+form.card .full { grid-column: 1 / -1; }
+label { display: grid; gap: 6px; font-size: 13px; color: var(--muted); min-width: 0; }
+input, select { font: inherit; font-size: 15px; color: var(--fg); background: var(--bg); border: 1px solid var(--line-2); border-radius: 10px; padding: 11px 12px; width: 100%; min-width: 0; }
+input:focus, select:focus { border-color: var(--amber); outline: none; }
+.slots { display: flex; flex-wrap: wrap; gap: 8px; }
+.slots label { display: block; }
+.slots input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.slots span { display: block; font-family: var(--mono); font-size: 12.5px; padding: 8px 12px; border: 1px solid var(--line-2); border-radius: 8px; cursor: pointer; color: var(--fg); }
+.slots input:checked + span { background: linear-gradient(135deg, var(--amber), var(--orange)); border-color: var(--amber); color: #000; font-weight: 700; }
+.form-msg { font-size: 13.5px; color: var(--green-hi); min-height: 1.4em; }
+.console { border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 18px; background: #040811; min-width: 0; overflow: hidden; }
+.console-top { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--agent); }
+.console-top button { margin-left: auto; font-family: var(--mono); font-size: 12px; background: var(--agent); color: #000; border: 0; border-radius: 999px; padding: 7px 14px; cursor: pointer; font-weight: 700; }
+.console pre { margin: 0; padding: 16px; font-family: var(--mono); font-size: 12.5px; line-height: 1.65; color: #CBD5E1; white-space: pre-wrap; overflow-wrap: anywhere; min-height: 300px; }
+.console pre .c { color: var(--dim); } .console pre .k { color: var(--agent); } .console pre .g { color: var(--green-hi); } .console pre .a { color: var(--amber); }
+@media (max-width: 900px) { .book { grid-template-columns: 1fr; } }
+@media (max-width: 520px) { form.card { grid-template-columns: 1fr; } }
+
+.faq { margin-top: 34px; display: grid; gap: 10px; max-width: 840px; }
+details { border: 1px solid var(--line-2); border-radius: 14px; background: var(--surface); padding: 0 20px; }
+summary { cursor: pointer; font-family: var(--display); font-weight: 600; font-size: 17px; padding: 18px 0; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+summary::after { content: "+"; font-family: var(--mono); color: var(--amber); font-weight: 700; }
+details[open] summary::after { content: "–"; }
+details p { color: var(--muted); padding-bottom: 18px; max-width: 66ch; }
+
+.agentband { background: #040710; border-block: 1px solid rgba(56, 189, 248, 0.25); }
+.agentband .eyebrow { color: var(--agent); }
+.layers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 36px; }
+.layer { border: 1px solid var(--line-2); border-radius: 16px; padding: 20px; background: var(--surface); min-width: 0; }
+.layer h3 { font-size: 17px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.layer p { font-size: 14px; color: var(--muted); margin-top: 8px; }
+.layer code, .tools code { font-family: var(--mono); font-size: 12.5px; color: var(--agent); overflow-wrap: anywhere; }
+.tools { margin-top: 18px; border: 1px solid var(--line-2); border-radius: 16px; overflow-x: auto; background: var(--surface); }
+.tools table { min-width: 640px; }
+.tools td { text-align: left; white-space: normal; color: var(--muted); font-size: 14px; }
+.tools th { text-align: left; }
+@media (max-width: 900px) { .layers { grid-template-columns: 1fr; } }
+
+footer { background: #03050B; border-top: 1px solid var(--line); color: var(--muted); position: relative; z-index: 10; }
+footer .wrap { padding-block: 48px; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1.2fr); gap: 28px; font-size: 14.5px; }
+footer h4 { font-family: var(--display); margin: 0 0 10px; font-size: 15px; color: var(--fg); }
+footer ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+footer .legal { grid-column: 1 / -1; border-top: 1px solid var(--line); padding-top: 16px; font-size: 13px; color: var(--dim); }
+@media (max-width: 760px) { footer .wrap { grid-template-columns: 1fr; } }
+
+.viewswitch {
+  position: fixed; z-index: 50;
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: flex; gap: 2px; padding: 4px; border-radius: 999px;
+  background: var(--surface-2); border: 1px solid var(--line-2);
+  box-shadow: 0 10px 40px #000c; font-family: var(--mono); font-size: 12px;
+}
+.viewswitch button { all: unset; cursor: pointer; padding: 8px 14px; border-radius: 999px; color: var(--muted); }
+.viewswitch button[aria-pressed="true"] { background: linear-gradient(135deg, var(--amber), var(--orange)); color: #000; font-weight: 700; }
+body.agent .viewswitch button[aria-pressed="true"] { background: var(--agent); }
+[data-agent] { position: relative; }
+body.agent [data-agent] { outline: 1px dashed rgba(56, 189, 248, 0.7); outline-offset: -6px; }
+body.agent [data-agent]::before {
+  content: attr(data-agent); position: absolute; z-index: 20;
+  top: 10px; left: var(--gut-l); right: var(--gut-r);
+  width: fit-content; max-width: calc(100% - 40px);
+  font-family: var(--mono); font-size: 11.5px; line-height: 1.5;
+  background: var(--agent); color: #000; padding: 5px 10px; border-radius: 6px; white-space: pre-wrap;
+}
+</style>
+</head>
+<body>
+
+<!-- CANVAS GLOBAL DEL MUNDO 3D ACOMPAÑANTE (GIRA SOBRE SU EJE, MARCA PUNTOS Y LANZA CARTELITOS DE GANANCIA) -->
+<canvas id="globe-companion-canvas" aria-hidden="true"></canvas>
+
+<!-- HUD INTERACTIVO DEL MUNDO DE VENTAS -->
+<aside class="globe-hud" aria-label="Control del Mundo de Ventas">
+  <button type="button" class="globe-hud-orb" id="globe-hud-orb" title="Lanzar oleada de ventas y animar sección">
+    <span style="font-size:16px">🌍</span>
+  </button>
+  <div class="globe-hud-info">
+    <span class="globe-hud-title" id="globe-hud-status">MUNDO DE VENTAS EN VIVO · ACTIVO</span>
+    <span class="globe-hud-sub" id="globe-hud-counter">Ganancia simulada en ruta: +$14,820</span>
+  </div>
+  <button type="button" class="globe-hud-btn" id="globe-pulse-btn">💸 +Ventas & Animar</button>
+</aside>
+
+<div class="sketchbar"><div class="wrap">
+  <span><b>Boceto Astro v4</b> · Mundo 3D de Conexiones y Ventas + Gráficos y Contadores Animados</span>
+  <span>Cada arco en el globo representa una venta en Amazon con su cartelito de ganancia para el cliente.</span>
+  <span>Al bajar por la página, el mundo te acompaña girando sobre su eje, marcando puntos y animando barras, gráficos y números.</span>
+</div></div>
+
+<header class="nav" data-agent="<header> + <nav aria-label> · Logo SVG oficial · SiteNavigationElement"><div class="wrap">
+  <a class="brand-logo" href="#top" aria-label="Mastro Minds - Inicio">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 280" fill="none" role="img" aria-label="Mastro Minds">
+      <defs>
+        <linearGradient id="curveGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#E53E3E" /><stop offset="45%" stop-color="#DD6B20" /><stop offset="100%" stop-color="#38A169" />
+        </linearGradient>
+        <linearGradient id="arrowGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#E53E3E" /><stop offset="40%" stop-color="#ED8936" /><stop offset="75%" stop-color="#38A169" /><stop offset="100%" stop-color="#2F855A" />
+        </linearGradient>
+      </defs>
+      <text x="30" y="115" font-family="Poppins, sans-serif" font-weight="800" font-size="76" fill="#FFFFFF" letter-spacing="-1.5">Mastro</text>
+      <path d="M 100 132 C 112 144, 138 144, 150 132" stroke="url(#curveGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
+      <text x="156" y="215" font-family="Poppins, sans-serif" font-weight="800" font-size="76" fill="#FFFFFF" letter-spacing="-1.5">Min</text>
+      <g transform="translate(305, 138)">
+        <circle cx="28" cy="56" r="21" stroke="url(#arrowGrad)" stroke-width="7.5" fill="none" />
+        <path d="M 48 68 L 48 -14" stroke="url(#arrowGrad)" stroke-width="7.5" stroke-linecap="round" />
+        <path d="M 33 -8 L 48 -24 L 63 -8" stroke="#38A169" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+      </g>
+      <text x="366" y="215" font-family="Poppins, sans-serif" font-weight="800" font-size="76" fill="#FFFFFF" letter-spacing="-1.5">s</text>
+    </svg>
+  </a>
+  <nav aria-label="Principal">
+    <a href="#resultados">Resultados y Gráficos</a>
+    <a href="#canales">Servicios y Precios</a>
+    <a href="#metodo">Método</a>
+    <a href="#ibernova">Ibernova</a>
+    <a href="#faq">Preguntas</a>
+  </nav>
+  <button type="button" class="globe-trigger-nav" id="nav-globe-burst">🌍 Disparar Ventas</button>
+  <span class="lang"><b>ES</b> | EN</span>
+  <a class="btn btn-primary" href="#reserva">Reserva una llamada</a>
+</div></header>
+
+<main id="top">
+
+<!-- ================= HERO CON MUNDO 3D INTERACTIVO DE CONEXIONES Y CARTELITOS DE GANANCIA ================= -->
+<section class="hero" id="hero-sec" data-agent="<h1> único · JSON-LD Organization + ProfessionalService · las 4 cifras verificadas están en el DOM">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">Agencia de crecimiento en Amazon · Hialeah, Florida</span>
+        <h1>Cada conexión en tu cuenta se convierte en <span class="shimmer-text">beneficio real</span>.</h1>
+        <p class="lead">Gestionamos tu publicidad, tus listings y tu rentabilidad en Amazon. Llevamos el mismo método a Walmart, TikTok Shop y Meta. Cada decisión sale de tus datos reales, medidos con Ibernova.</p>
+        <div class="cta-row">
+          <button type="button" class="btn btn-primary" id="hero-burst-btn">💸 Simular Oleada de Ventas en el Mundo</button>
+          <a class="btn btn-ghost" href="#resultados">Ver gráficos en movimiento ↓</a>
+        </div>
+        <p class="fine">🌍 Arrastra o haz clic sobre el mundo 3D para rotarlo y disparar conexiones de venta con beneficio neto.</p>
+
+        <!-- 4 KPIs del Hero con Contadores Numéricos Animados -->
+        <div class="hero-kpis">
+          <div class="hkpi">
+            <span class="num" data-count="847114" data-prefix="$">$847,114</span>
+            <span>Ventas ene–jul 2025 (Sustainable Scaling)</span>
+          </div>
+          <div class="hkpi">
+            <span class="num" data-count="8.02" data-decimals="2" data-suffix=" %">8.02 %</span>
+            <span>ACOS medio en 21 meses (Efficiency Engine)</span>
+          </div>
+          <div class="hkpi">
+            <span class="num" data-count="12.5" data-decimals="1" data-suffix="x">12.5x</span>
+            <span>ROAS: $171,760 con $13,772 en anuncios</span>
+          </div>
+          <div class="hkpi">
+            <span class="num" data-count="974" data-suffix=" ★4.4">974 ★4.4</span>
+            <span>Reseñas y 400+ compras/mes (Perfect Listing)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESCENARIO DEL MUNDO 3D EN EL HERO -->
+      <div class="globe-stage">
+        <canvas id="hero-globe-canvas" aria-label="Mundo 3D interactivo mostrando conexiones de ventas y cartelitos de ganancia de clientes"></canvas>
+        <div class="globe-live-pill">
+          <span>🟢 Conexiones FBA & Ads activas</span>
+          <b id="hero-profit-ticker">+$24,680 ganados</b>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rail" data-agent="knowsAbout: Amazon Ads, Seller Central, Walmart Marketplace, TikTok Shop, Meta Ads"><div class="wrap">
+  <i>Red de canales conectados</i><b>Amazon Ads</b><b>Seller Central</b><b>Brand Store y Contenido A+</b><i>·</i><b>Walmart Marketplace</b><b>TikTok Shop</b><b>Meta Ads</b>
+</div></div>
+
+
+<!-- ================= RESULTADOS REALES CON BARRAS CARGÁNDOSE, GRÁFICOS EN MOVIMIENTO Y NÚMEROS CONTANDO ================= -->
+<section class="band" id="resultados" data-anim-section data-agent="<section id=resultados> · 4 ItemList / CreativeWork con cifras reales + gráficos animados + contadores numéricos">
+  <div class="wrap">
+    <div class="section-anim-bar">
+      <span class="eyebrow">Resultados verificados · Gráficos y contadores en vivo</span>
+      <button type="button" class="reanim-btn" data-reanim="#resultados">↻ Reproducir carga de barras, gráficos y números</button>
+    </div>
+    <h2 class="h2">Cuentas reales. Datos medidos. Todo en movimiento.</h2>
+    <p class="lead">Cada cifra corresponde a una cuenta gestionada por el equipo y muestra su periodo real. Al entrar en pantalla, las barras se cargan, las curvas se trazan con pulsos en vivo y los números cuentan desde cero.</p>
+
+    <div class="cases">
+      <!-- Caso principal: Sustainable Brand Scaling -->
+      <article class="case big">
+        <div class="meta">
+          <span class="tag ok">Escala sostenida</span>
+          <span>1 ene – 9 jul 2025 · comparado con el año 2024 completo</span>
+        </div>
+        <h3>Sustainable Brand Scaling</h3>
+        <p class="t">En poco más de seis meses de 2025 la cuenta alcanzó dos tercios de toda la facturación del año anterior, subiendo además el precio medio por unidad.</p>
+        <div class="spec">
+          <div>
+            <span class="num" data-count="847114" data-prefix="$">$847,114</span>
+            <span>Ventas ene–jul 2025</span>
+          </div>
+          <div>
+            <span class="num" data-count="39800">39,800</span>
+            <span>Pedidos</span>
+          </div>
+          <div>
+            <span class="num" data-count="44474">44,474</span>
+            <span>Unidades vendidas</span>
+          </div>
+          <div>
+            <span class="num" data-count="21.28" data-decimals="2" data-prefix="$">$21.28</span>
+            <span>Precio medio ($20.08 en 2024)</span>
+          </div>
+        </div>
+
+        <!-- Barras animadas que se cargan de 0% a su valor + Curva de ritmo de ventas en movimiento -->
+        <div class="chart-box" aria-label="Comparativa animada y curva de ventas">
+          <div class="chart-box-head">
+            <span>RITMO DE FACTURACIÓN ACUMULADA (BARRAS + CURVA EN VIVO)</span>
+            <span style="color:var(--green-hi)"><b data-count="67.4" data-decimals="1" data-suffix="%">67.4%</b> en 6.3 meses</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:12px;">
+            <span>Ene–9 jul 2025 (6,3 meses)</span>
+            <b style="color:var(--green-hi)" data-count="847114" data-prefix="$" data-suffix=" · 67.4%">$847,114 · 67.4%</b>
+          </div>
+          <div class="bar-track"><div class="bar-fill green" data-w="67.4"></div></div>
+          <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-top:8px;">
+            <span>Año 2024 completo (12 meses)</span>
+            <span data-count="1256294" data-prefix="$" data-suffix=" · 100%">$1,256,294 · 100%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" data-w="100" style="opacity:0.45"></div></div>
+
+          <!-- Gráfico SVG con curva que se dibuja y pulso luminoso viajando -->
+          <svg viewBox="0 0 520 96" style="width:100%; height:88px; display:block; margin-top:12px" role="img" aria-label="Curva de aceleración de ventas 2025 vs 2024">
+            <defs>
+              <linearGradient id="areaGreen" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#2ECC71" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#2ECC71" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <line x1="20" y1="78" x2="500" y2="78" stroke="#1E293B" stroke-width="1"/>
+            <line x1="20" y1="44" x2="500" y2="44" stroke="#1E293B" stroke-dasharray="3 3" stroke-width="1"/>
+            <!-- Ritmo base 2024 -->
+            <path d="M20,76 L110,68 L200,58 L290,49 L380,38 L490,26" fill="none" stroke="#64748B" stroke-width="1.8" stroke-dasharray="4 4"/>
+            <!-- Área y curva 2025 acelerada -->
+            <path d="M20,76 C95,66 165,50 245,34 C325,19 410,12 490,8 L490,78 L20,78 Z" fill="url(#areaGreen)"/>
+            <path id="curve-case1" class="svg-curve" d="M20,76 C95,66 165,50 245,34 C325,19 410,12 490,8" fill="none" stroke="#2ECC71" stroke-width="3" stroke-linecap="round"/>
+            <!-- Punto viajero en movimiento continuo -->
+            <circle r="4.5" fill="#FFFFFF" stroke="#2ECC71" stroke-width="2.5">
+              <animateMotion dur="3.4s" repeatCount="indefinite" path="M20,76 C95,66 165,50 245,34 C325,19 410,12 490,8"/>
+            </circle>
+            <text x="24" y="20" fill="#2ECC71" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700">▲ Ritmo 2025 (+$21.28/ud.)</text>
+            <text x="395" y="72" fill="#94A3B8" font-family="JetBrains Mono, monospace" font-size="9.5">-- Ritmo 2024</text>
+          </svg>
+        </div>
+
+        <figure class="shot">
+          <img src="data:image/webp;base64,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" width="960" height="447" loading="lazy" alt="Captura verificada del panel de Amazon Ads mostrando $13,772.14 de inversión, $171,760.29 de ventas atribuidas y 8.02% de ACOS">
+          <figcaption>Captura real de Amazon Ads Console (caso The Efficiency Engine): $13,772.14 invertidos → $171,760.29 en ventas · ACOS 8.02 %.</figcaption>
+        </figure>
+      </article>
+
+      <div class="case-col">
+        <!-- Caso 2: The Efficiency Engine -->
+        <article class="case">
+          <div class="meta"><span class="tag orange">Publicidad</span><span>Oct 2022 – Jun 2024 · 21 meses</span></div>
+          <h3>The Efficiency Engine</h3>
+          <div class="spec">
+            <div><span class="num" data-count="171760" data-prefix="$">$171,760</span><span>Ventas atribuidas a Ads</span></div>
+            <div><span class="num" data-count="8.02" data-decimals="2" data-suffix=" %">8.02 %</span><span>ACOS medio del periodo</span></div>
+            <div><span class="num" data-count="13772" data-prefix="$">$13,772</span><span>Inversión publicitaria</span></div>
+            <div><span class="num" data-count="12.5" data-decimals="1" data-suffix="x">12.5x</span><span>ROAS ($12.47 por cada $1)</span></div>
+          </div>
+          <!-- Barras + onda de retorno ROAS -->
+          <div class="chart-box">
+            <div class="chart-box-head">
+              <span>MULTIPLICADOR DE RETORNO PUBLICITARIO</span>
+              <span style="color:var(--amber)">$1 → <b data-count="12.47" data-decimals="2" data-prefix="$">$12.47</b></span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:11.5px;">
+              <span>Retorno ROAS (12.5x)</span>
+              <b style="color:var(--green-hi)" data-count="171760" data-prefix="$">$171,760</b>
+            </div>
+            <div class="bar-track"><div class="bar-fill green" data-w="92.5"></div></div>
+            <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted); margin-top:6px;">
+              <span>Coste publicitario ACOS (8.02%)</span>
+              <span style="color:var(--amber)" data-count="13772" data-prefix="$">$13,772</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" data-w="8.02"></div></div>
+            <svg viewBox="0 0 380 54" style="width:100%; height:50px; display:block; margin-top:10px" aria-hidden="true">
+              <path class="svg-curve" d="M10,44 Q65,40 110,30 T210,20 T310,12 L370,8" fill="none" stroke="#FAB412" stroke-width="2.5" stroke-linecap="round"/>
+              <circle r="4" fill="#FFF" stroke="#FA6711" stroke-width="2">
+                <animateMotion dur="2.8s" repeatCount="indefinite" path="M10,44 Q65,40 110,30 T210,20 T310,12 L370,8"/>
+              </circle>
+            </svg>
+          </div>
+        </article>
+
+        <!-- Caso 3: Profit Maximization -->
+        <article class="case">
+          <div class="meta"><span class="tag ok">Rentabilidad</span><span>30 días hasta el 9 jul 2025</span></div>
+          <h3>Profit Maximization</h3>
+          <div class="spec">
+            <div><span class="num" data-count="3544" data-prefix="$">$3,544</span><span>Beneficio neto en 30 días</span></div>
+            <div><span class="num" data-count="46.6" data-decimals="1" data-suffix=" %">46.6 %</span><span>Margen neto sobre ventas</span></div>
+            <div><span class="num" data-count="7612" data-prefix="$">$7,612</span><span>Ventas netas del mes</span></div>
+            <div><span class="num" data-count="456">456</span><span>Unidades (<b data-count="7.77" data-decimals="2" data-prefix="$">$7.77</b> neto/ud.)</span></div>
+          </div>
+          <!-- Columnas verticales que se cargan de 0 a su altura y laten -->
+          <div class="chart-box">
+            <div class="chart-box-head">
+              <span>PROGRESIÓN DE MARGEN NETO SEMANAL</span>
+              <span style="color:var(--green-hi)"><b data-count="7.77" data-decimals="2" data-prefix="+$" data-suffix="/ud.">+$7.77/ud.</b></span>
+            </div>
+            <div class="vcols">
+              <div class="vcol-wrap"><div class="vcol-bar" style="--i:0" data-h="42"></div><span class="vcol-lbl">S1</span></div>
+              <div class="vcol-wrap"><div class="vcol-bar" style="--i:1" data-h="54"></div><span class="vcol-lbl">S2</span></div>
+              <div class="vcol-wrap"><div class="vcol-bar" style="--i:2" data-h="63"></div><span class="vcol-lbl">S3</span></div>
+              <div class="vcol-wrap"><div class="vcol-bar" style="--i:3" data-h="71"></div><span class="vcol-lbl">S4</span></div>
+              <div class="vcol-wrap"><div class="vcol-bar" style="--i:4" data-h="82"></div><span class="vcol-lbl">S5</span></div>
+              <div class="vcol-wrap"><div class="vcol-bar" style="--i:5" data-h="90"></div><span class="vcol-lbl">S6</span></div>
+              <div class="vcol-wrap"><div class="vcol-bar" style="--i:6" data-h="98"></div><span class="vcol-lbl">46.6%</span></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Caso 4: The Perfect Listing -->
+        <article class="case">
+          <div class="meta"><span class="tag beta">Listing y conversión</span><span>Categoría fundas iPhone · Amazon EE. UU.</span></div>
+          <h3>The Perfect Listing</h3>
+          <div class="spec">
+            <div><span class="num" data-count="974">974</span><span>Reseñas acumuladas</span></div>
+            <div><span class="num" data-count="4.4" data-decimals="1" data-suffix=" ★">4.4 ★</span><span>Valoración media</span></div>
+            <div><span class="num" data-count="400" data-suffix="+">400+</span><span>Compras al mes del ASIN</span></div>
+            <div><span class="num" data-count="3" data-suffix=" gen.">3 gen.</span><span>iPhone 14 → 16 Pro Max</span></div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-box-head">
+              <span>SALUD DE CONVERSIÓN Y RETENCIÓN DE RESEÑAS</span>
+              <span style="color:var(--amber)"><b data-count="88" data-suffix="%">88%</b> score</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:11.5px;">
+              <span>Índice de valoración (4.4 / 5.0 ★)</span>
+              <b style="color:var(--amber)" data-count="88" data-suffix="%">88%</b>
+            </div>
+            <div class="bar-track"><div class="bar-fill" data-w="88"></div></div>
+            <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted); margin-top:6px;">
+              <span>Continuidad de catálogo (3 generaciones iPhone)</span>
+              <span style="color:var(--blue)" data-count="95" data-suffix="%">95%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill blue" data-w="95"></div></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SERVICIOS Y PRECIOS CON CONTADORES Y BARRAS DE COBERTURA ================= -->
+<section class="band" id="canales" data-anim-section data-agent="<section id=canales> · Service + OfferCatalog con rango de precios público ($1,000 y $2,000)">
+  <div class="wrap">
+    <div class="section-anim-bar">
+      <span class="eyebrow">Qué hacemos y cuánto cuesta</span>
+      <button type="button" class="reanim-btn" data-reanim="#canales">↻ Animar precios y barras de cobertura</button>
+    </div>
+    <h2 class="h2">Amazon es el centro. Los demás canales multiplican.</h2>
+    <p class="lead">Publicamos nuestras tarifas de entrada porque ahorra tiempo a todo el mundo: sabes antes de hablar si encajamos con el momento de tu marca.</p>
+
+    <div class="svc">
+      <div class="svc-main">
+        <div>
+          <span class="tag ok">Canal principal</span>
+          <h3 style="margin-top:10px">Amazon 360°</h3>
+          <p style="color:var(--muted); margin-top:8px; font-size:15px">Elige entre delegar solo la publicidad o dejar toda la cuenta en nuestras manos. En ambos casos trabajamos con Ibernova conectado a tu Seller Central.</p>
+          <div style="margin-top:16px">
+            <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--muted)">
+              <span>Foco operativo en margen neto real</span>
+              <b style="color:var(--green-hi)" data-count="100" data-suffix="%">100%</b>
+            </div>
+            <div class="bar-track"><div class="bar-fill green" data-w="100"></div></div>
+          </div>
+        </div>
+        <div class="plan">
+          <h4>Solo Amazon Ads (PPC)</h4>
+          <span class="num">Desde <span data-count="1000" data-prefix="$">$1,000</span><small>/ mes + % sobre ventas atribuidas</small></span>
+          <ul>
+            <li>Sponsored Products, Brands y Display</li>
+            <li>Arquitectura por familia, margen y etapa</li>
+            <li>Cosecha y negativización continua de términos</li>
+            <li>Control de TACoS para no inflar gasto sin margen</li>
+          </ul>
+          <div style="margin-top:14px">
+            <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted)">
+              <span>Cobertura publicitaria</span><b style="color:var(--amber)" data-count="85" data-suffix="%">85%</b>
+            </div>
+            <div class="bar-track"><div class="bar-fill" data-w="85"></div></div>
+          </div>
+        </div>
+        <div class="plan" style="border-color:rgba(46,204,113,0.45)">
+          <h4>Gestión integral de cuenta</h4>
+          <span class="num">Desde <span data-count="2000" data-prefix="$">$2,000</span><small>/ mes + % sobre facturación o beneficio</small></span>
+          <ul>
+            <li>Todo lo incluido en Amazon Ads</li>
+            <li>SEO de listings, imágenes, vídeo, A+ y Brand Store</li>
+            <li>Inventario FBA, salud de cuenta y casos con soporte</li>
+            <li>Lanzamientos y defensa de marca (Brand Registry)</li>
+          </ul>
+          <div style="margin-top:14px">
+            <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted)">
+              <span>Cobertura integral 360°</span><b style="color:var(--green-hi)" data-count="100" data-suffix="%">100%</b>
+            </div>
+            <div class="bar-track"><div class="bar-fill green" data-w="100"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <article class="svc-side">
+        <h3>Walmart Marketplace</h3>
+        <p>Alta como vendedor, adaptación de catálogo, Walmart Connect y logística WFS para marcas que ya venden en Amazon EE. UU.</p>
+        <div class="bar-track"><div class="bar-fill blue" data-w="82"></div></div>
+        <span class="tag ok">Operativo en EE. UU.</span>
+      </article>
+      <article class="svc-side">
+        <h3>TikTok Shop</h3>
+        <p>Tienda nativa, programa de creadores afiliados y anuncios de compra en vídeo conectados con tu inventario.</p>
+        <div class="bar-track"><div class="bar-fill" data-w="78"></div></div>
+        <span class="tag ok">Catálogo + afiliados</span>
+      </article>
+      <article class="svc-side">
+        <h3>Meta Ads hacia Amazon</h3>
+        <p>Tráfico externo desde Instagram y Facebook con Amazon Attribution para impulsar lanzamientos y ranking orgánico.</p>
+        <div class="bar-track"><div class="bar-fill green" data-w="88"></div></div>
+        <span class="tag ok">Amazon Attribution</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MÉTODO EN 4 FASES CON GRÁFICOS ANIMADOS ================= -->
+<section class="band" id="metodo" data-anim-section data-agent="<section id=metodo> · HowTo con 4 HowToStep · Todo el contenido está en el HTML inicial">
+  <div class="wrap">
+    <div class="section-anim-bar">
+      <span class="eyebrow">Cómo trabajamos</span>
+      <button type="button" class="reanim-btn" data-reanim="#metodo">↻ Re-animar fase activa</button>
+    </div>
+    <h2 class="h2">Cuatro fases, en este orden.</h2>
+    <p class="lead">No metemos inversión publicitaria en un listing que no convierte, ni escalamos un SKU del que no conocemos el margen neto después de todas las comisiones de Amazon.</p>
+
+    <div class="method">
+      <div class="steps" role="tablist" aria-label="Fases del método">
+        <button type="button" role="tab" aria-selected="true" data-step="0"><span>01</span>Auditoría de margen</button>
+        <button type="button" role="tab" aria-selected="false" data-step="1"><span>02</span>Listing y conversión</button>
+        <button type="button" role="tab" aria-selected="false" data-step="2"><span>03</span>Publicidad rentable</button>
+        <button type="button" role="tab" aria-selected="false" data-step="3"><span>04</span>Escala multicanal</button>
+      </div>
+
+      <div class="panel" data-panel="0">
+        <div>
+          <span class="tag orange">Semana 1</span>
+          <h3 style="margin-top:8px">01 · Auditoría de margen y catálogo</h3>
+          <p>Conectamos la cuenta a Ibernova y desglosamos qué gana o pierde cada ASIN después de coste de producto, FBA, almacenamiento, devoluciones y publicidad.</p>
+          <ul>
+            <li>Mapa de rentabilidad real por SKU (no el ROAS superficial de consola)</li>
+            <li>Detección de gasto publicitario en términos que no convierten o canibalizan</li>
+            <li>Revisión de salud de cuenta, supresiones y riesgo de rotura de stock</li>
+          </ul>
+          <div class="out">Entregable: hoja de ruta de 90 días priorizada por impacto en beneficio neto.</div>
+        </div>
+        <div class="chart-box">
+          <div class="chart-box-head"><span>DESGLOSE DE MARGEN REAL POR UNIDAD</span><b style="color:var(--green-hi)" data-count="46.6" data-decimals="1" data-suffix="% neto">46.6% neto</b></div>
+          <div style="font-size:12px; display:flex; justify-content:space-between"><span>Beneficio neto cliente ($7.77/ud.)</span><b style="color:var(--green-hi)" data-count="46.6" data-decimals="1" data-suffix="%">46.6%</b></div>
+          <div class="bar-track"><div class="bar-fill green" data-w="46.6"></div></div>
+          <div style="font-size:12px; display:flex; justify-content:space-between; margin-top:8px"><span>Tarifas FBA + Referral controladas</span><span data-count="28.4" data-decimals="1" data-suffix="%">28.4%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-w="28.4"></div></div>
+          <div style="font-size:12px; display:flex; justify-content:space-between; margin-top:8px"><span>Inversión Ads eficiente (ACOS)</span><span style="color:var(--amber)" data-count="8.02" data-decimals="2" data-suffix="%">8.02%</span></div>
+          <div class="bar-track"><div class="bar-fill blue" data-w="8.02"></div></div>
+        </div>
+      </div>
+
+      <div class="panel" data-panel="1" hidden>
+        <div>
+          <span class="tag beta">Semanas 2 – 4</span>
+          <h3 style="margin-top:8px">02 · Reconstrucción de listing y conversión</h3>
+          <p>Antes de pujar más fuerte nos aseguramos de que cada clic tenga las máximas probabilidades de terminar en compra y en reseña positiva.</p>
+          <ul>
+            <li>Arquitectura de palabras clave en título, viñetas y campos traseros</li>
+            <li>Secuencia de imágenes, infografías de beneficios, vídeo y Contenido A+</li>
+            <li>Estructura de variaciones para conservar reseñas entre generaciones</li>
+          </ul>
+          <div class="out">Entregable: fichas listas para convertir tráfico de pago y orgánico (modelo 974 ★4.4).</div>
+        </div>
+        <div class="chart-box">
+          <div class="chart-box-head"><span>IMPACTO EN CONVERSIÓN DE FICHA</span><b style="color:var(--amber)" data-count="974" data-suffix=" ★4.4">974 ★4.4</b></div>
+          <svg viewBox="0 0 320 110" style="width:100%; height:105px; display:block">
+            <line x1="16" y1="92" x2="304" y2="92" stroke="#1E293B"/>
+            <path class="svg-curve" d="M20,84 C80,80 120,62 175,42 C225,24 265,16 300,12" fill="none" stroke="#2ECC71" stroke-width="3"/>
+            <circle r="4.5" fill="#FFF" stroke="#2ECC71" stroke-width="2">
+              <animateMotion dur="2.6s" repeatCount="indefinite" path="M20,84 C80,80 120,62 175,42 C225,24 265,16 300,12"/>
+            </circle>
+            <text x="22" y="24" fill="#2ECC71" font-family="JetBrains Mono, monospace" font-size="10">400+ compras/mes sostenidas</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="panel" data-panel="2" hidden>
+        <div>
+          <span class="tag ok">Continuo · Mes 1 en adelante</span>
+          <h3 style="margin-top:8px">03 · Sistema publicitario de alta eficiencia</h3>
+          <p>Separamos campañas de descubrimiento, cosecha exacta, defensa de marca y ataque a competidores, con pujas gobernadas por margen neto.</p>
+          <ul>
+            <li>Presupuesto dirigido a los ASINs que más dinero dejan en caja</li>
+            <li>Negativización semanal de búsquedas sin compra</li>
+            <li>Seguimiento de ACOS y TACoS para que la publicidad empuje al orgánico</li>
+          </ul>
+          <div class="out">Entregable: crecimiento rentable y medible (referencia: 8.02 % ACOS · 12.5x ROAS).</div>
+        </div>
+        <div class="chart-box">
+          <div class="chart-box-head"><span>EFICIENCIA PPC EN 21 MESES</span><b style="color:var(--green-hi)" data-count="12.5" data-decimals="1" data-suffix="x ROAS">12.5x ROAS</b></div>
+          <div style="font-size:12px; display:flex; justify-content:space-between"><span>Ventas atribuidas</span><b style="color:var(--green-hi)" data-count="171760" data-prefix="$">$171,760</b></div>
+          <div class="bar-track"><div class="bar-fill green" data-w="92"></div></div>
+          <div style="font-size:12px; display:flex; justify-content:space-between; margin-top:8px"><span>Inversión total (8.02% ACOS)</span><span style="color:var(--amber)" data-count="13772" data-prefix="$">$13,772</span></div>
+          <div class="bar-track"><div class="bar-fill" data-w="8.02"></div></div>
+        </div>
+      </div>
+
+      <div class="panel" data-panel="3" hidden>
+        <div>
+          <span class="tag ok">A partir del mes 3</span>
+          <h3 style="margin-top:8px">04 · Escala y expansión multicanal</h3>
+          <p>Con los unit economics controlados en Amazon, abrimos nuevas fuentes de ingresos aprovechando el mismo catálogo y contenido creativo.</p>
+          <ul>
+            <li>Tráfico externo desde Meta Ads con bono de Amazon Attribution</li>
+            <li>Apertura de Walmart Marketplace y TikTok Shop en EE. UU.</li>
+            <li>Previsión de compras e inventario para crecer sin quedarte sin stock</li>
+          </ul>
+          <div class="out">Entregable: facturación diversificada bajo un único cuadro de mando.</div>
+        </div>
+        <div class="chart-box">
+          <div class="chart-box-head"><span>EXPANSIÓN MULTICANAL SINCRONIZADA</span><b style="color:var(--amber)" data-count="4" data-suffix=" Canales">4 Canales</b></div>
+          <div class="vcols">
+            <div class="vcol-wrap"><div class="vcol-bar" style="--i:0" data-h="96"></div><span class="vcol-lbl">AMZ</span></div>
+            <div class="vcol-wrap"><div class="vcol-bar" style="--i:1" data-h="74"></div><span class="vcol-lbl">WMT</span></div>
+            <div class="vcol-wrap"><div class="vcol-bar" style="--i:2" data-h="68"></div><span class="vcol-lbl">TIK</span></div>
+            <div class="vcol-wrap"><div class="vcol-bar" style="--i:3" data-h="82"></div><span class="vcol-lbl">META</span></div>
+            <div class="vcol-wrap"><div class="vcol-bar" style="--i:4" data-h="88"></div><span class="vcol-lbl">B2B</span></div>
+            <div class="vcol-wrap"><div class="vcol-bar" style="--i:5" data-h="92"></div><span class="vcol-lbl">UE</span></div>
+            <div class="vcol-wrap"><div class="vcol-bar" style="--i:6" data-h="100"></div><span class="vcol-lbl">360°</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= IBERNOVA (SOFTWARE PROPIO CON CONTADORES Y BARRAS EN TABLA) ================= -->
+<section class="band iber" id="ibernova" data-anim-section data-agent="<section id=ibernova> · SoftwareApplication (Ibernova) vinculada como propiedad / partner tecnológico de Mastro Minds">
+  <div class="wrap">
+    <div class="iber-grid">
+      <div>
+        <div class="section-anim-bar" style="margin-bottom:6px">
+          <span class="eyebrow">Tecnología propia · Ibernova</span>
+          <button type="button" class="reanim-btn" data-reanim="#ibernova">↻ Animar tabla Ibernova</button>
+        </div>
+        <h2 class="h2">No gestionamos a ciegas con hojas de cálculo.</h2>
+        <p class="lead">Ibernova es nuestra plataforma de inteligencia para vendedores de Amazon. Todos los clientes de gestión integral tienen su cuenta conectada desde el primer día.</p>
+        <div class="feat">
+          <div><span class="tag ok">P&amp;L en vivo</span><span><b>Beneficio neto real por SKU</b> descontando COGS, tarifas FBA, almacenamiento, reembolsos e impuestos.</span></div>
+          <div><span class="tag ok">Publicidad</span><span><b>TACoS y margen después de anuncios</b> para saber si escalar una campaña aumenta o reduce tu caja.</span></div>
+          <div><span class="tag ok">Operaciones</span><span><b>Alertas de stock, Buy Box y listings</b> antes de que una incidencia frene el ranking del producto.</span></div>
+        </div>
+      </div>
+
+      <div class="app" aria-label="Vista ilustrativa del panel de Ibernova con datos animados">
+        <div class="app-top">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span>ibernova.app · cuenta conectada por SP-API + Amazon Ads API</span>
+          <span class="tag beta demo">Datos animados</span>
+        </div>
+        <div class="app-tabs" role="tablist" aria-label="Vistas de Ibernova">
+          <button type="button" role="tab" aria-selected="true" data-iber="0">Rentabilidad por SKU</button>
+          <button type="button" role="tab" aria-selected="false" data-iber="1">Cuenta de resultados (30d)</button>
+          <button type="button" role="tab" aria-selected="false" data-iber="2">Alertas y restock</button>
+        </div>
+        <div class="app-body">
+          <div data-iber-panel="0">
+            <table>
+              <thead><tr><th>SKU / Producto</th><th>Ventas 30d</th><th>ACOS</th><th>Neto / ud.</th><th>Margen neto</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>MM-CASE-16PM · Funda iPhone 16 Pro Max</td>
+                  <td data-count="7612" data-prefix="$">$7,612</td>
+                  <td data-count="8.0" data-decimals="1" data-suffix=" %">8.0 %</td>
+                  <td class="pos" data-count="7.77" data-decimals="2" data-prefix="+$">+$7.77</td>
+                  <td class="pos">
+                    <span data-count="46.6" data-decimals="1" data-suffix=" %">46.6 %</span>
+                    <div class="bar-track" style="height:5px;width:72px;display:inline-block;margin-left:6px;vertical-align:middle"><div class="bar-fill green" data-w="93"></div></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>MM-CASE-15PM · Funda iPhone 15 Pro Max</td>
+                  <td data-count="6140" data-prefix="$">$6,140</td>
+                  <td data-count="9.4" data-decimals="1" data-suffix=" %">9.4 %</td>
+                  <td class="pos" data-count="6.12" data-decimals="2" data-prefix="+$">+$6.12</td>
+                  <td class="pos">
+                    <span data-count="34.2" data-decimals="1" data-suffix=" %">34.2 %</span>
+                    <div class="bar-track" style="height:5px;width:72px;display:inline-block;margin-left:6px;vertical-align:middle"><div class="bar-fill green" data-w="68"></div></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>MM-GLASS-2PK · Protector templado pack 2</td>
+                  <td data-count="3290" data-prefix="$">$3,290</td>
+                  <td data-count="11.2" data-decimals="1" data-suffix=" %">11.2 %</td>
+                  <td class="pos" data-count="4.05" data-decimals="2" data-prefix="+$">+$4.05</td>
+                  <td class="pos">
+                    <span data-count="28.9" data-decimals="1" data-suffix=" %">28.9 %</span>
+                    <div class="bar-track" style="height:5px;width:72px;display:inline-block;margin-left:6px;vertical-align:middle"><div class="bar-fill" data-w="58"></div></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>MM-BUNDLE-MAG · Kit carga magnética (en revisión)</td>
+                  <td data-count="1480" data-prefix="$">$1,480</td>
+                  <td class="neg" data-count="29.8" data-decimals="1" data-suffix=" %">29.8 %</td>
+                  <td class="neg" data-count="0.64" data-decimals="2" data-prefix="-$">-$0.64</td>
+                  <td class="neg">Pausar / ajustar</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="app-note">Así decidimos dónde meter presupuesto y qué SKU parar antes de que drene el beneficio del resto del catálogo.</p>
+          </div>
+
+          <div data-iber-panel="1" hidden>
+            <table>
+              <thead><tr><th>Concepto (caso Profit Maximization · 30 días)</th><th>Importe</th><th>% s/ ventas</th></tr></thead>
+              <tbody>
+                <tr><td>Ventas netas (456 unidades)</td><td data-count="7612" data-prefix="$">$7,612</td><td data-count="100" data-suffix=" %">100 %</td></tr>
+                <tr><td>Coste de producto + tarifas Amazon FBA y referencia</td><td data-count="3458" data-prefix="-$">-$3,458</td><td data-count="45.4" data-decimals="1" data-suffix=" %">45.4 %</td></tr>
+                <tr><td>Inversión publicitaria atribuida</td><td data-count="610" data-prefix="-$">-$610</td><td data-count="8.0" data-decimals="1" data-suffix=" %">8.0 %</td></tr>
+                <tr><td><b>Beneficio neto en caja</b></td><td class="pos" data-count="3544" data-prefix="+$">+$3,544</td><td class="pos" data-count="46.6" data-decimals="1" data-suffix=" %">46.6 %</td></tr>
+              </tbody>
+            </table>
+            <p class="app-note">Cifras reales del caso Profit Maximization (30 días hasta el 9 de julio de 2025 · $7.77 de beneficio neto por unidad).</p>
+          </div>
+
+          <div data-iber-panel="2" hidden>
+            <table>
+              <thead><tr><th>Alerta activa</th><th>SKU afectado</th><th>Cobertura</th><th>Acción del equipo</th></tr></thead>
+              <tbody>
+                <tr><td>Reposición FBA recomendada</td><td>MM-CASE-16PM</td><td><span data-count="24" data-suffix=" días">24 días</span></td><td class="pos">Envío creado (600 uds.)</td></tr>
+                <tr><td>Término con gasto sin compras</td><td>Campaña Auto · Exact</td><td><span data-count="42" data-prefix="$" data-suffix=" / 0 conv.">$42 / 0 conv.</span></td><td class="pos">Negativizado</td></tr>
+                <tr><td>Variación heredando reseñas</td><td>Familia iPhone 14→16</td><td><span data-count="974" data-suffix=" ★4.4">974 ★4.4</span></td><td class="pos">Activa y estable</td></tr>
+              </tbody>
+            </table>
+            <p class="app-note">Las alertas evitan los dos errores más caros en Amazon: quedarse sin inventario en pleno pico o quemar presupuesto en clics vacíos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COMPARATIVA ================= -->
+<section class="band" id="comparativa">
+  <div class="wrap">
+    <span class="eyebrow">Por qué nos eligen</span>
+    <h2 class="h2">Qué cambia cuando trabajas con nosotros.</h2>
+    <div class="cmp">
+      <table>
+        <thead>
+          <tr><th>Criterio</th><th>Agencia de volumen</th><th>Freelance aislado</th><th>Mastro Minds + Ibernova</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Métrica principal</td><td>Impresiones y ventas brutas aunque pierdan margen</td><td>ACOS de campaña sin ver el resto de la cuenta</td><td>Beneficio neto en dólares por SKU y margen total</td></tr>
+          <tr><td>Software de control</td><td>Informes mensuales en PDF o Excel manual</td><td>Consola básica de Seller Central</td><td>Ibernova conectado en tiempo real a tu cuenta</td></tr>
+          <tr><td>Publicidad + fichas</td><td>Equipos separados que no se hablan</td><td>Hace anuncios pero no toca imágenes ni A+</td><td>Mismo equipo para PPC, SEO, diseño A+ y Brand Store</td></tr>
+          <tr><td>Más allá de Amazon</td><td>No salen de Amazon</td><td>Un solo canal</td><td>Amazon + Walmart + TikTok Shop + Meta Ads coordinados</td></tr>
+          <tr><td>Precios antes de llamar</td><td>Ocultos hasta la tercera reunión</td><td>Variables sin alcance claro</td><td>Públicos desde la web: $1,000 Ads · $2,000 Integral</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RESERVA INTERACTIVA + CONSOLA WEBHOOK ================= -->
+<section class="band" id="reserva" data-agent="<section id=reserva> · Formulario nativo conectado a POST /api/booking + herramienta WebMCP book_audit_call">
+  <div class="wrap">
+    <span class="eyebrow">Reserva directa · Sin popups externos</span>
+    <h2 class="h2">Agenda tu auditoría de 30 minutos.</h2>
+    <p class="lead">El formulario vive en nuestra propia página: elige día y hora, cuéntanos en qué punto está tu cuenta y el sistema agenda la videollamada directamente en nuestro flujo de automatización.</p>
+
+    <div class="book">
+      <form class="card" id="book-form">
+        <label>Nombre y apellido
+          <input name="name" required placeholder="Ana García" value="Ana García">
+        </label>
+        <label>Correo profesional
+          <input name="email" type="email" required placeholder="ana@tumarca.com" value="ana@tumarca.com">
+        </label>
+        <label>Marca o tienda en Amazon
+          <input name="brand" required placeholder="TuMarca USA" value="NovaHome USA">
+        </label>
+        <label>Facturación mensual actual
+          <select name="revenue">
+            <option value="10k-50k">$10,000 – $50,000 / mes</option>
+            <option value="50k-150k" selected>$50,000 – $150,000 / mes</option>
+            <option value="150k+">Más de $150,000 / mes</option>
+            <option value="launch">Lanzamiento con capital listo</option>
+          </select>
+        </label>
+        <label class="full">Qué necesitas resolver primero
+          <select name="service">
+            <option value="full" selected>Gestión integral de cuenta Amazon (desde $2,000/mes)</option>
+            <option value="ppc">Optimización de Amazon Ads / PPC (desde $1,000/mes)</option>
+            <option value="multichannel">Expansión a Walmart, TikTok Shop o Meta Ads</option>
+          </select>
+        </label>
+        <div class="full">
+          <span style="font-size:13px; color:var(--muted); display:block; margin-bottom:6px">Huecos disponibles (hora de Miami · ET)</span>
+          <div class="slots">
+            <label><input type="radio" name="slot" value="2026-04-16T10:00:00-04:00" checked><span>Jue 10:00 ET</span></label>
+            <label><input type="radio" name="slot" value="2026-04-16T14:30:00-04:00"><span>Jue 14:30 ET</span></label>
+            <label><input type="radio" name="slot" value="2026-04-17T11:00:00-04:00"><span>Vie 11:00 ET</span></label>
+            <label><input type="radio" name="slot" value="2026-04-20T16:00:00-04:00"><span>Lun 16:00 ET</span></label>
+          </div>
+        </div>
+        <div class="full" style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-top:4px">
+          <button class="btn btn-primary" type="submit">Confirmar reserva y probar envío →</button>
+          <span class="form-msg" id="form-msg" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+
+      <div class="console" aria-label="Inspector del envío al webhook y WebMCP">
+        <div class="console-top">
+          <span>POST /api/booking → webhook n8n / Make</span>
+          <span class="tag todo">WebMCP: book_audit_call</span>
+          <button type="button" id="sim-agent">Simular agente IA</button>
+        </div>
+        <pre id="console-out"></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PREGUNTAS FRECUENTES ================= -->
+<section class="band" id="faq" data-agent="<section id=faq> · FAQPage JSON-LD cuyos textos coinciden palabra por palabra con estos <details>">
+  <div class="wrap">
+    <span class="eyebrow">Preguntas frecuentes</span>
+    <h2 class="h2">Respuestas directas, sin letra pequeña.</h2>
+    <div class="faq">
+      <details open>
+        <summary>¿Cuánto cuesta trabajar con Mastro Minds?</summary>
+        <p>La gestión dedicada de publicidad en Amazon (PPC) parte de $1,000 al mes más un porcentaje acordado sobre resultados. La gestión integral de cuenta (publicidad, SEO de listings, Contenido A+, Brand Store, inventario FBA y acceso a Ibernova) parte de $2,000 al mes más variable.</p>
+      </details>
+      <details>
+        <summary>¿Con qué tipo de marcas trabajáis mejor?</summary>
+        <p>Marcas con producto propio (Private Label) o distribuidores exclusivos en Estados Unidos y Europa que ya venden en Amazon o tienen inventario listo para lanzar, y que buscan escalar mirando el beneficio neto en caja en lugar de inflar ventas sin margen.</p>
+      </details>
+      <details>
+        <summary>¿Qué incluye exactamente el acceso a Ibernova?</summary>
+        <p>Conectamos tu Seller Central y tu cuenta de Amazon Ads mediante las APIs oficiales para ver en tiempo real el beneficio neto por SKU, el impacto real de la publicidad (ACOS y TACoS), las devoluciones, las comisiones FBA y las alertas de inventario.</p>
+      </details>
+      <details>
+        <summary>¿Cuándo se empiezan a ver mejoras en ACOS y margen?</summary>
+        <p>Los recortes de gasto improductivo y términos sin conversión se aplican desde las dos primeras semanas. La mejora estructural de conversión en listings y el escalado rentable se consolidan a lo largo de los primeros 60 a 90 días.</p>
+      </details>
+      <details>
+        <summary>¿Quién es la entidad legal detrás de Mastro Minds?</summary>
+        <p>Mastro Minds opera desde 6175 NW 167 ST Suite G39, Hialeah, FL 33015 (Estados Unidos), bajo la sociedad Ellas Enterprise LLC registrada en el Estado de Nueva Jersey.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ARQUITECTURA PARA AGENTES IA ================= -->
+<section class="band agentband" id="agentes" data-agent="Resumen de las 3 capas del sitio definitivo en Astro: descubrimiento pasivo, lectura estructurada y acción WebMCP">
+  <div class="wrap">
+    <span class="eyebrow">Debajo del capó · Listo para buscadores y agentes de IA</span>
+    <h2 class="h2">Cómo verán este sitio Google, ChatGPT, Perplexity y los navegadores con IA.</h2>
+    <p class="lead">Este boceto no es solo diseño visual: cada bloque tiene su equivalente legible por máquina para que un agente pueda descubrir qué hace Mastro Minds, verificar sus casos reales y reservar una llamada en nombre del usuario.</p>
+
+    <div class="layers">
+      <article class="layer">
+        <h3>1 · Descubrimiento <span class="tag ok">Pasivo</span></h3>
+        <p>Archivos estáticos servidos desde la raíz del dominio en Astro + Cloudflare Pages:</p>
+        <p><code>/robots.txt</code> con permisos explícitos para <code>GPTBot</code>, <code>OAI-SearchBot</code>, <code>ClaudeBot</code>, <code>PerplexityBot</code> y <code>Google-Extended</code>.<br><code>/llms.txt</code> y <code>/llms-full.txt</code> con servicios, precios, casos verificados y contacto.<br><code>/sitemap-index.xml</code> con <code>hreflang="es"</code> y <code>hreflang="en"</code>.</p>
+      </article>
+      <article class="layer">
+        <h3>2 · Datos estructurados <span class="tag ok">JSON-LD</span></h3>
+        <p>Un único bloque <code>@graph</code> por página cuyos datos coinciden exactamente con el texto visible:</p>
+        <p><code>Organization</code> + <code>ProfessionalService</code> (Hialeah, FL · matriz legal Ellas Enterprise LLC), <code>SoftwareApplication</code> (Ibernova), <code>Service</code> + <code>OfferCatalog</code> ($1,000 / $2,000), <code>ItemList</code> con los 4 casos reales y <code>FAQPage</code>.</p>
+      </article>
+      <article class="layer">
+        <h3>3 · Acción directa <span class="tag todo">WebMCP</span></h3>
+        <p>Cuando el navegador del visitante soporta <code>navigator.modelContext</code>, registramos herramientas con esquema JSON para que su asistente actúe sin raspar la pantalla:</p>
+        <p><code>get_agency_services</code> · <code>get_verified_case_studies</code> · <code>estimate_growth_plan</code> · <code>book_audit_call</code>.</p>
+      </article>
+    </div>
+
+    <div class="tools" aria-label="Tabla de herramientas WebMCP">
+      <table>
+        <thead><tr><th>Herramienta WebMCP</th><th>Tipo</th><th>Entrada</th><th>Respuesta estructurada al agente</th></tr></thead>
+        <tbody>
+          <tr><td><code>get_agency_services</code></td><td>Lectura</td><td><code>{ channel?: "amazon" | "walmart" | "tiktok" | "meta" }</code></td><td>Planes desde $1,000/mes (Amazon Ads) y $2,000/mes (Gestión integral) con entregables.</td></tr>
+          <tr><td><code>get_verified_case_studies</code></td><td>Lectura</td><td><code>{ focus?: "ppc" | "scale" | "profit" | "listing" }</code></td><td>Los 4 casos verificados con sus cifras exactas y su periodo temporal obligatorio.</td></tr>
+          <tr><td><code>book_audit_call</code></td><td>Escritura</td><td><code>{ name, email, brand, revenue, service, slot }</code></td><td>Envía el payload al webhook de automatización y devuelve confirmación con identificador de cita.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ================= PIE DE PÁGINA ================= -->
+<footer data-agent="<footer> · NAP idéntico al JSON-LD Organization · enlace a entidad legal Ellas Enterprise LLC">
+  <div class="wrap">
+    <div>
+      <h4>Mastro Minds</h4>
+      <p>Agencia de crecimiento e-commerce especializada en Amazon, Walmart Marketplace, TikTok Shop y Meta Ads, impulsada por nuestra plataforma Ibernova.</p>
+    </div>
+    <div>
+      <h4>Contacto directo</h4>
+      <ul>
+        <li>6175 NW 167 ST Suite G39, Hialeah, FL 33015</li>
+        <li><a href="tel:+17185140746">+1 (718) 514-0746</a></li>
+        <li><a href="mailto:customerservice@mastromindsnyc.com">customerservice@mastromindsnyc.com</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Secciones</h4>
+      <ul>
+        <li><a href="#resultados">Casos de estudio verificados</a></li>
+        <li><a href="#canales">Servicios y tarifas públicas</a></li>
+        <li><a href="#ibernova">Plataforma Ibernova</a></li>
+        <li><a href="#reserva">Reservar auditoría</a></li>
+      </ul>
+    </div>
+    <div class="legal">
+      © 2026 Mastro Minds · Operado por Ellas Enterprise LLC (registrada en el Estado de Nueva Jersey, EE. UU.) · Privacidad · Términos · ES / EN
+    </div>
+  </div>
+</footer>
+
+<!-- Conmutador flotante: Vista humana vs. Vista agente IA -->
+<div class="viewswitch" role="group" aria-label="Cambiar modo de inspección del boceto">
+  <button type="button" id="v-human" aria-pressed="true">Vista humana</button>
+  <button type="button" id="v-agent" aria-pressed="false">Vista agente IA</button>
+</div>
+
+<script>
+/* ==========================================================================
+   MOTOR INTERACTIVO V4:
+   1. MUNDO 3D CONECTADO EN EL HERO (PUNTOS + CONEXIONES DE VENTAS + CARTELITOS DE GANANCIA)
+   2. MUNDO 3D ACOMPAÑANTE EN SCROLL (MOVIMIENTO SUAVE LADO A LADO, GIRANDO SOBRE SU EJE Y MARCANDO PUNTOS)
+   3. ANIMACIÓN UNIVERSAL DE NÚMEROS (CONTADORES), BARRAS CARGÁNDOSE Y GRÁFICOS EN MOVIMIENTO
+   ========================================================================== */
+
+(() => {
+  /* ------------------------------------------------------------------------
+     1. DEFINICIÓN DEL MUNDO 3D, PUNTOS DE MARKETPLACE, ARCOS Y CARTELITOS
+     ------------------------------------------------------------------------ */
+  // Nodos reales de operación/ventas e-commerce (latitud/longitud en grados)
+  const MARKET_NODES = [
+    { id: 'MIA', name: 'Miami HQ',      lat: 25.8,  lon: -80.2,  hub: true,  color: '#2ECC71' },
+    { id: 'NYC', name: 'New York',      lat: 40.7,  lon: -74.0,  hub: true,  color: '#FAB412' },
+    { id: 'LAX', name: 'Los Angeles',   lat: 34.0,  lon: -118.2, hub: false, color: '#2ECC71' },
+    { id: 'DFW', name: 'Texas FBA',     lat: 32.7,  lon: -96.8,  hub: false, color: '#FAB412' },
+    { id: 'SEA', name: 'Seattle AMZ',   lat: 47.6,  lon: -122.3, hub: true,  color: '#FA6711' },
+    { id: 'YYZ', name: 'Toronto',       lat: 43.6,  lon: -79.3,  hub: false, color: '#38BDF8' },
+    { id: 'MEX', name: 'CDMX',          lat: 19.4,  lon: -99.1,  hub: false, color: '#FAB412' },
+    { id: 'BOG', name: 'Bogotá',        lat: 4.7,   lon: -74.0,  hub: false, color: '#2ECC71' },
+    { id: 'GRU', name: 'São Paulo',     lat: -23.5, lon: -46.6,  hub: false, color: '#38BDF8' },
+    { id: 'MAD', name: 'Madrid EU',     lat: 40.4,  lon: -3.7,   hub: true,  color: '#FAB412' },
+    { id: 'LHR', name: 'London UK',     lat: 51.5,  lon: -0.1,   hub: false, color: '#2ECC71' },
+    { id: 'FRA', name: 'Frankfurt DE',  lat: 50.1,  lon: 8.6,    hub: false, color: '#FA6711' },
+    { id: 'NRT', name: 'Tokyo JP',      lat: 35.6,  lon: 139.6,  hub: false, color: '#38BDF8' },
+    { id: 'SYD', name: 'Sydney AU',     lat: -33.8, lon: 151.2,  hub: false, color: '#2ECC71' }
+  ];
+
+  // Nube de puntos de continentes aproximados para que el globo se vea nítido y reconocible
+  const CONTINENT_PATCHES = [
+    // Norteamérica
+    { latMin: 25, latMax: 60, lonMin: -125, lonMax: -70, step: 6 },
+    { latMin: 15, latMax: 25, lonMin: -105, lonMax: -80, step: 6 },
+    // Sudamérica
+    { latMin: -45, latMax: 10, lonMin: -78, lonMax: -38, step: 6.5 },
+    // Europa
+    { latMin: 36, latMax: 64, lonMin: -9, lonMax: 35, step: 5.5 },
+    // África
+    { latMin: -32, latMax: 34, lonMin: -16, lonMax: 46, step: 7 },
+    // Asia
+    { latMin: 15, latMax: 62, lonMin: 40, lonMax: 142, step: 7.5 },
+    // Australia
+    { latMin: -38, latMax: -14, lonMin: 115, lonMax: 152, step: 6.5 }
+  ];
+
+  const LAND_DOTS = [];
+  CONTINENT_PATCHES.forEach(p => {
+    for (let lat = p.latMin; lat <= p.latMax; lat += p.step) {
+      for (let lon = p.lonMin; lon <= p.lonMax; lon += p.step) {
+        // Pequeña máscara pseudoaleatoria determinista para dar silueta orgánica
+        const mask = Math.sin(lat * 0.23 + lon * 0.17) + Math.cos(lat * 0.11 - lon * 0.29);
+        if (mask > -0.35) {
+          LAND_DOTS.push({
+            lat: lat + Math.sin(lon) * 1.4,
+            lon: lon + Math.cos(lat) * 1.4
+          });
+        }
+      }
+    }
+  });
+
+  // Ejemplos de ventas con ganancia neta del cliente para los cartelitos flotantes
+  const SALE_EVENTS = [
+    { amount: 148.50, label: 'Venta Amazon FBA · Neto' },
+    { amount: 77.70,  label: 'Pack 10 uds. · Margen 46.6%' },
+    { amount: 312.40, label: 'Sponsored Products · ROAS 12.5x' },
+    { amount: 94.20,  label: ' Pedido Prime · Ganancia cliente' },
+    { amount: 215.00, label: 'Brand Store · Carrito directo' },
+    { amount: 63.80,  label: 'Funda iPhone 16PM · +$7.77/ud' },
+    { amount: 428.90, label: 'Recompra B2B · Margen neto' },
+    { amount: 184.00, label: 'Walmart WFS · Beneficio' },
+    { amount: 129.60, label: 'TikTok Shop · Conversión' }
+  ];
+
+  let totalSimulatedProfit = 24680;
+  const heroTickerEl = document.getElementById('hero-profit-ticker');
+  const hudCounterEl = document.getElementById('globe-hud-counter');
+
+  function addSimulatedProfit(val) {
+    totalSimulatedProfit += val;
+    const formatted = '+$' + Math.round(totalSimulatedProfit).toLocaleString('en-US');
+    if (heroTickerEl) heroTickerEl.textContent = formatted + ' ganados';
+    if (hudCounterEl) hudCounterEl.textContent = 'Ganancia cliente en vivo: ' + formatted;
+  }
+
+  // Conversión de (lat, lon) + rotación (rotY, rotX) a coordenadas 3D (x, y, z) en esfera unitaria
+  function projectLatLon(latDeg, lonDeg, rotY, rotX) {
+    const lat = (latDeg * Math.PI) / 180;
+    const lon = (lonDeg * Math.PI) / 180 + rotY;
+    const cosLat = Math.cos(lat);
+    const sinLat = Math.sin(lat);
+    const cosLon = Math.cos(lon);
+    const sinLon = Math.sin(lon);
+
+    const x0 = cosLat * sinLon;
+    const y0 = -sinLat;
+    const z0 = cosLat * cosLon;
+
+    const cosX = Math.cos(rotX);
+    const sinX = Math.sin(rotX);
+    const y = y0 * cosX - z0 * sinX;
+    const z = y0 * sinX + z0 * cosX;
+    return { x: x0, y, z };
+  }
+
+  // Función que dibuja un Mundo 3D completo en cualquier contexto 2D en (cx, cy) con radio R
+  function renderGlobeInstance(ctx, state, cx, cy, R, dt, isHero) {
+    ctx.save();
+
+    // 1. Halo atmosférico exterior esmeralda y ámbar
+    const outerGlow = ctx.createRadialGradient(cx, cy, R * 0.72, cx, cy, R * 1.48);
+    outerGlow.addColorStop(0, 'rgba(46, 204, 113, 0.22)');
+    outerGlow.addColorStop(0.55, 'rgba(56, 189, 248, 0.11)');
+    outerGlow.addColorStop(0.8, 'rgba(250, 180, 18, 0.06)');
+    outerGlow.addColorStop(1, 'rgba(5, 7, 14, 0)');
+    ctx.fillStyle = outerGlow;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R * 1.48, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2. Anillo orbital exterior punteado girando
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(state.rotY * 0.35);
+    ctx.strokeStyle = 'rgba(46, 204, 113, 0.28)';
+    ctx.lineWidth = isHero ? 1.3 : 1;
+    ctx.setLineDash([6, 8]);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, R * 1.18, R * 0.38, -0.28, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+
+    // 3. Esfera oceánica base con iluminación 3D
+    const sphereGrad = ctx.createRadialGradient(
+      cx - R * 0.32, cy - R * 0.32, R * 0.08,
+      cx, cy, R
+    );
+    sphereGrad.addColorStop(0, '#13284C');
+    sphereGrad.addColorStop(0.55, '#091326');
+    sphereGrad.addColorStop(0.92, '#040812');
+    sphereGrad.addColorStop(1, '#020409');
+    ctx.fillStyle = sphereGrad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Borde brillante del planeta
+    ctx.strokeStyle = 'rgba(46, 204, 113, 0.55)';
+    ctx.lineWidth = isHero ? 2 : 1.5;
+    ctx.stroke();
+
+    // 4. Meridianos y paralelos 3D
+    ctx.lineWidth = 0.75;
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.13)';
+    // Meridianos
+    for (let lon = -150; lon <= 180; lon += 30) {
+      ctx.beginPath();
+      let started = false;
+      for (let lat = -80; lat <= 80; lat += 10) {
+        const p = projectLatLon(lat, lon, state.rotY, state.rotX);
+        if (p.z > -0.05) {
+          const sx = cx + p.x * R;
+          const sy = cy + p.y * R;
+          if (!started) { ctx.moveTo(sx, sy); started = true; }
+          else ctx.lineTo(sx, sy);
+        } else {
+          started = false;
+        }
+      }
+      ctx.stroke();
+    }
+    // Paralelos
+    for (let lat = -60; lat <= 60; lat += 30) {
+      ctx.beginPath();
+      let started = false;
+      for (let lon = -180; lon <= 180; lon += 10) {
+        const p = projectLatLon(lat, lon, state.rotY, state.rotX);
+        if (p.z > -0.05) {
+          const sx = cx + p.x * R;
+          const sy = cy + p.y * R;
+          if (!started) { ctx.moveTo(sx, sy); started = true; }
+          else ctx.lineTo(sx, sy);
+        } else {
+          started = false;
+        }
+      }
+      ctx.stroke();
+    }
+
+    // 5. Puntos de continentes (cara trasera tenue + cara frontal luminosa)
+    for (let i = 0; i < LAND_DOTS.length; i++) {
+      const d = LAND_DOTS[i];
+      const p = projectLatLon(d.lat, d.lon, state.rotY, state.rotX);
+      if (p.z < -0.25) continue;
+      const sx = cx + p.x * R;
+      const sy = cy + p.y * R;
+      const alpha = p.z > 0 ? 0.18 + p.z * 0.45 : 0.06;
+      const dotR = (isHero ? 1.7 : 1.2) * (p.z > 0 ? (0.75 + p.z * 0.4) : 0.6);
+      ctx.fillStyle = `rgba(56, 189, 248, ${alpha.toFixed(2)})`;
+      ctx.beginPath();
+      ctx.arc(sx, sy, dotR, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 6. Proyección de los nodos de ventas (Marketplaces)
+    const projectedNodes = MARKET_NODES.map((n, idx) => {
+      const p = projectLatLon(n.lat, n.lon, state.rotY, state.rotX);
+      return {
+        ...n,
+        idx,
+        x: cx + p.x * R,
+        y: cy + p.y * R,
+        nx: p.x,
+        ny: p.y,
+        z: p.z
+      };
+    });
+
+    // Dibujar nodos visibles y sus anillos radar de marcación
+    projectedNodes.forEach(n => {
+      if (n.z < -0.15) return;
+      const visAlpha = Math.max(0.2, Math.min(1, (n.z + 0.2) / 0.9));
+      const baseR = (isHero ? (n.hub ? 5.2 : 3.8) : (n.hub ? 3.8 : 2.8));
+
+      // Pulso radar continuo en cada nodo activo
+      const pulsePhase = (state.time * 1.6 + n.idx * 0.47) % 1;
+      const pulseR = baseR + pulsePhase * (isHero ? 16 : 11);
+      ctx.strokeStyle = n.color === '#2ECC71'
+        ? `rgba(46, 204, 113, ${(1 - pulsePhase) * 0.65 * visAlpha})`
+        : `rgba(250, 180, 18, ${(1 - pulsePhase) * 0.65 * visAlpha})`;
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, pulseR, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Punto central brillante
+      ctx.fillStyle = n.color;
+      ctx.shadowColor = n.color;
+      ctx.shadowBlur = isHero ? 10 : 6;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, baseR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Etiqueta de ciudad en los hubs visibles de frente
+      if (n.z > 0.32 && (isHero || n.hub)) {
+        ctx.font = `${isHero ? '600 10px' : '600 8.5px'} "JetBrains Mono", monospace`;
+        ctx.fillStyle = `rgba(255, 255, 255, ${(visAlpha * 0.85).toFixed(2)})`;
+        ctx.fillText(n.id, n.x + baseR + 4, n.y + 3);
+      }
+    });
+
+    // 7. Arcos de conexión (ventas en tránsito entre puntos del mundo)
+    for (let i = state.arcs.length - 1; i >= 0; i--) {
+      const arc = state.arcs[i];
+      arc.progress += dt * arc.speed;
+
+      const fromNode = projectedNodes[arc.fromIdx];
+      const toNode = projectedNodes[arc.toIdx];
+
+      if (fromNode && toNode && (fromNode.z > -0.25 || toNode.z > -0.25)) {
+        // Punto medio elevado hacia afuera de la esfera para simular arco 3D
+        const midX = (fromNode.x + toNode.x) * 0.5;
+        const midY = (fromNode.y + toNode.y) * 0.5;
+        const dx = midX - cx;
+        const dy = midY - cy;
+        const dist = Math.hypot(fromNode.x - toNode.x, fromNode.y - toNode.y);
+        const norm = Math.hypot(dx, dy) || 1;
+        const lift = Math.min(R * 0.55, dist * 0.48);
+        const ctrlX = midX + (dx / norm) * lift;
+        const ctrlY = midY - Math.abs(dy / norm) * lift * 0.55 - lift * 0.45;
+
+        // Estela completa tenue del arco
+        ctx.strokeStyle = 'rgba(250, 180, 18, 0.22)';
+        ctx.lineWidth = isHero ? 1.4 : 1.1;
+        ctx.beginPath();
+        ctx.moveTo(fromNode.x, fromNode.y);
+        ctx.quadraticCurveTo(ctrlX, ctrlY, toNode.x, toNode.y);
+        ctx.stroke();
+
+        // Segmento activo iluminado de la venta viajando
+        const t1 = Math.max(0, arc.progress - 0.28);
+        const t2 = Math.min(1, arc.progress);
+        const steps = 12;
+        ctx.strokeStyle = arc.color;
+        ctx.lineWidth = isHero ? 2.6 : 2.0;
+        ctx.shadowColor = arc.color;
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        for (let s = 0; s <= steps; s++) {
+          const t = t1 + (t2 - t1) * (s / steps);
+          const inv = 1 - t;
+          const px = inv * inv * fromNode.x + 2 * inv * t * ctrlX + t * t * toNode.x;
+          const py = inv * inv * fromNode.y + 2 * inv * t * ctrlY + t * t * toNode.y;
+          if (s === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // Cabeza luminosa del paquete de venta
+        const tHead = Math.min(1, arc.progress);
+        const invH = 1 - tHead;
+        const hx = invH * invH * fromNode.x + 2 * invH * tHead * ctrlX + tHead * tHead * toNode.x;
+        const hy = invH * invH * fromNode.y + 2 * invH * tHead * ctrlY + tHead * tHead * toNode.y;
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(hx, hy, isHero ? 3.6 : 2.8, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Cuando la conexión llega al nodo destino -> estalla un cartelito de ganancia para el cliente
+      if (arc.progress >= 1) {
+        if (toNode && toNode.z > -0.15) {
+          spawnProfitBadge(state, toNode.x, toNode.y, toNode.id, arc.sale);
+        }
+        state.arcs.splice(i, 1);
+      }
+    }
+
+    // 8. Cartelitos flotantes de ganancia ("+$XX.XX Cliente gana")
+    for (let i = state.badges.length - 1; i >= 0; i--) {
+      const b = state.badges[i];
+      b.age += dt;
+      if (b.age >= b.life) {
+        state.badges.splice(i, 1);
+        continue;
+      }
+      const p = b.age / b.life;
+      const alpha = p < 0.15 ? p / 0.15 : (p > 0.75 ? (1 - p) / 0.25 : 1);
+      const floatY = b.y - b.age * (isHero ? 26 : 20);
+      const floatX = b.x + b.vx * b.age;
+
+      // Anillo de impacto en el punto de venta durante los primeros instantes
+      if (p < 0.45) {
+        const ringP = p / 0.45;
+        ctx.strokeStyle = `rgba(46, 204, 113, ${(1 - ringP) * 0.85})`;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, 4 + ringP * (isHero ? 24 : 16), 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Dibujar cartelito (badge) con número de dinero ganado
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+      const amountTxt = `+$${b.amount.toFixed(2)}`;
+      const subTxt = isHero ? `${b.city} · ${b.label}` : `${b.city} · Venta`;
+
+      ctx.font = `800 ${isHero ? 12.5 : 10.5}px "Poppins", sans-serif`;
+      const w1 = ctx.measureText(amountTxt).width;
+      ctx.font = `600 ${isHero ? 9.5 : 8}px "JetBrains Mono", monospace`;
+      const w2 = ctx.measureText(subTxt).width;
+
+      const boxW = Math.max(w1, w2) + (isHero ? 20 : 14);
+      const boxH = isHero ? 34 : 26;
+      const bx = floatX - boxW * 0.5;
+      const by = floatY - boxH - 8;
+
+      // Fondo del cartelito
+      ctx.fillStyle = 'rgba(6, 12, 22, 0.92)';
+      ctx.strokeStyle = '#2ECC71';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      if (ctx.roundRect) {
+        ctx.roundRect(bx, by, boxW, boxH, 8);
+      } else {
+        ctx.rect(bx, by, boxW, boxH);
+      }
+      ctx.fill();
+      ctx.stroke();
+
+      // Puntero inferior hacia el nodo
+      ctx.fillStyle = '#2ECC71';
+      ctx.beginPath();
+      ctx.moveTo(floatX - 4, by + boxH);
+      ctx.lineTo(floatX + 4, by + boxH);
+      ctx.lineTo(floatX, by + boxH + 5);
+      ctx.closePath();
+      ctx.fill();
+
+      // Texto de ganancia (+$XX.XX)
+      ctx.font = `800 ${isHero ? 12.5 : 10.5}px "Poppins", sans-serif`;
+      ctx.fillStyle = '#2ECC71';
+      ctx.fillText(amountTxt, bx + (isHero ? 10 : 7), by + (isHero ? 15 : 12));
+
+      // Subtítulo del cartelito
+      ctx.font = `600 ${isHero ? 9 : 7.5}px "JetBrains Mono", monospace`;
+      ctx.fillStyle = '#E2E8F0';
+      ctx.fillText(subTxt, bx + (isHero ? 10 : 7), by + (isHero ? 27 : 21));
+
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
+  function spawnProfitBadge(state, x, y, city, saleObj) {
+    const sale = saleObj || SALE_EVENTS[Math.floor(Math.random() * SALE_EVENTS.length)];
+    // Evitar saturar demasiados cartelitos simultáneos
+    if (state.badges.length > (state.maxBadges || 5)) {
+      state.badges.shift();
+    }
+    state.badges.push({
+      x,
+      y,
+      vx: (Math.random() - 0.5) * 10,
+      city,
+      amount: sale.amount,
+      label: sale.label,
+      age: 0,
+      life: 2.3
+    });
+    addSimulatedProfit(sale.amount);
+  }
+
+  function spawnSaleArc(state, forcedToIdx) {
+    // Elegir dos nodos que estén en el hemisferio visible para que el usuario vea siempre la conexión
+    const visibleIndices = [];
+    for (let i = 0; i < MARKET_NODES.length; i++) {
+      const p = projectLatLon(MARKET_NODES[i].lat, MARKET_NODES[i].lon, state.rotY, state.rotX);
+      if (p.z > 0.05) visibleIndices.push(i);
+    }
+    if (visibleIndices.length < 2) return;
+
+    const fromIdx = visibleIndices[Math.floor(Math.random() * visibleIndices.length)];
+    let toIdx = typeof forcedToIdx === 'number' ? forcedToIdx : visibleIndices[Math.floor(Math.random() * visibleIndices.length)];
+    if (toIdx === fromIdx) {
+      toIdx = visibleIndices[(visibleIndices.indexOf(fromIdx) + 1) % visibleIndices.length];
+    }
+    const sale = SALE_EVENTS[Math.floor(Math.random() * SALE_EVENTS.length)];
+    const colors = ['#2ECC71', '#FAB412', '#38BDF8', '#FA6711'];
+    state.arcs.push({
+      fromIdx,
+      toIdx,
+      progress: 0,
+      speed: 0.72 + Math.random() * 0.45,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      sale
+    });
+  }
+
+  function triggerSalesBurst(state, count = 4) {
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => spawnSaleArc(state), i * 160);
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+     2. INSTANCIA 1: MUNDO 3D DEL HERO (#hero-globe-canvas)
+     ------------------------------------------------------------------------ */
+  const heroCanvas = document.getElementById('hero-globe-canvas');
+  const heroCtx = heroCanvas ? heroCanvas.getContext('2d') : null;
+  const heroGlobeState = {
+    rotY: 1.15, // Empieza enfocando América y Europa
+    rotX: 0.24,
+    velY: 0.0045,
+    dragging: false,
+    lastMouseX: 0,
+    lastMouseY: 0,
+    time: 0,
+    arcs: [],
+    badges: [],
+    maxBadges: 6
+  };
+
+  function resizeHeroCanvas() {
+    if (!heroCanvas) return;
+    const rect = heroCanvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    heroCanvas.width = Math.max(300, rect.width * dpr);
+    heroCanvas.height = Math.max(300, rect.height * dpr);
+    if (heroCtx) heroCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  if (heroCanvas) {
+    resizeHeroCanvas();
+    window.addEventListener('resize', resizeHeroCanvas);
+
+    // Interacción de arrastrar para girar el mundo del Hero
+    heroCanvas.addEventListener('pointerdown', e => {
+      heroGlobeState.dragging = true;
+      heroGlobeState.lastMouseX = e.clientX;
+      heroGlobeState.lastMouseY = e.clientY;
+      heroCanvas.setPointerCapture(e.pointerId);
+    });
+    heroCanvas.addEventListener('pointermove', e => {
+      if (!heroGlobeState.dragging) return;
+      const dx = e.clientX - heroGlobeState.lastMouseX;
+      const dy = e.clientY - heroGlobeState.lastMouseY;
+      heroGlobeState.lastMouseX = e.clientX;
+      heroGlobeState.lastMouseY = e.clientY;
+      heroGlobeState.rotY += dx * 0.008;
+      heroGlobeState.rotX = Math.max(-0.65, Math.min(0.65, heroGlobeState.rotX + dy * 0.006));
+    });
+    heroCanvas.addEventListener('pointerup', () => {
+      heroGlobeState.dragging = false;
+      triggerSalesBurst(heroGlobeState, 3);
+    });
+    heroCanvas.addEventListener('click', () => {
+      triggerSalesBurst(heroGlobeState, 3);
+    });
+  }
+
+  /* ------------------------------------------------------------------------
+     3. INSTANCIA 2: MUNDO 3D ACOMPAÑANTE EN SCROLL (#globe-companion-canvas)
+        Se mueve suavemente de lado a lado (misma cinemática amortiguada que V2),
+        gira sobre su eje continuamente y marca puntos con ventas y cartelitos.
+     ------------------------------------------------------------------------ */
+  const compCanvas = document.getElementById('globe-companion-canvas');
+  const compCtx = compCanvas ? compCanvas.getContext('2d') : null;
+  let vw = window.innerWidth;
+  let vh = window.innerHeight;
+
+  const compGlobeState = {
+    x: vw * 0.85,
+    y: vh * 0.28,
+    vx: 0,
+    vy: 0,
+    radius: 56,
+    targetRadius: 56,
+    rotY: 0.9,
+    rotX: 0.22,
+    time: 0,
+    arcs: [],
+    badges: [],
+    maxBadges: 3,
+    trail: []
+  };
+
+  function resizeCompCanvas() {
+    if (!compCanvas) return;
+    vw = window.innerWidth;
+    vh = window.innerHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    compCanvas.width = vw * dpr;
+    compCanvas.height = vh * dpr;
+    if (compCtx) compCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resizeCompCanvas();
+  window.addEventListener('resize', resizeCompCanvas);
+
+  // Scroll suavizado para que el mundo acompañante nunca pegue tirones
+  let rawScrollPct = 0;
+  let smoothScrollPct = 0;
+  let lastScrollY = window.scrollY;
+
+  window.addEventListener('scroll', () => {
+    const docH = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    rawScrollPct = Math.min(1, Math.max(0, window.scrollY / docH));
+
+    // Al hacer scroll, acelerar ligeramente el giro axial del mundo y lanzar una venta si hay avance
+    const deltaY = Math.abs(window.scrollY - lastScrollY);
+    if (deltaY > 90) {
+      lastScrollY = window.scrollY;
+      if (compGlobeState.arcs.length < 3) {
+        spawnSaleArc(compGlobeState);
+      }
+    }
+  }, { passive: true });
+
+  /* ------------------------------------------------------------------------
+     4. BUCLE PRINCIPAL DE ANIMACIÓN 60 FPS (AMBOS MUNDOS 3D)
+     ------------------------------------------------------------------------ */
+  let lastFrameTime = performance.now();
+  let heroSpawnTimer = 0;
+  let compSpawnTimer = 0;
+
+  // Lanzar conexiones iniciales al cargar
+  triggerSalesBurst(heroGlobeState, 4);
+  triggerSalesBurst(compGlobeState, 2);
+
+  function animateGlobes(now) {
+    const dt = Math.min(0.05, (now - lastFrameTime) / 1000);
+    lastFrameTime = now;
+
+    // --- A) Renderizar Mundo 3D del Hero (si está cerca de la vista) ---
+    if (heroCanvas && heroCtx && window.scrollY < vh * 1.35) {
+      const rect = heroCanvas.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      heroCtx.clearRect(0, 0, w, h);
+
+      heroGlobeState.time += dt;
+      if (!heroGlobeState.dragging) {
+        heroGlobeState.rotY += 0.32 * dt; // Giro continuo sobre su eje
+      }
+
+      heroSpawnTimer += dt;
+      if (heroSpawnTimer > 0.85) {
+        heroSpawnTimer = 0;
+        if (heroGlobeState.arcs.length < 6) {
+          spawnSaleArc(heroGlobeState);
+        }
+      }
+
+      const R = Math.min(w, h) * 0.36;
+      renderGlobeInstance(heroCtx, heroGlobeState, w * 0.5, h * 0.49, R, dt, true);
+    }
+
+    // --- B) Actualizar y Renderizar Mundo 3D Acompañante en Scroll ---
+    if (compCanvas && compCtx) {
+      compCtx.clearRect(0, 0, vw, vh);
+
+      // Filtrado suave del scroll (idéntico al arreglo suave de V2)
+      smoothScrollPct += (rawScrollPct - smoothScrollPct) * 0.032;
+      compGlobeState.time += dt;
+
+      // El mundo acompañante gira continuamente sobre su eje + un extra suave con el scroll
+      compGlobeState.rotY += 0.52 * dt;
+
+      // Trayectoria serpenteante de lado a lado de la pantalla
+      const wavePhase = smoothScrollPct * Math.PI * 3.0 + compGlobeState.time * 0.22;
+      const sideFactor = (Math.cos(wavePhase) + 1) * 0.5; // 0 (izq) a 1 (der)
+      const marginX = Math.max(76, vw * 0.085);
+      const targetX = marginX + sideFactor * (vw - marginX * 2);
+      const targetY = vh * 0.22 + smoothScrollPct * (vh * 0.54) + Math.sin(compGlobeState.time * 0.7) * 14;
+
+      // Cuando el usuario está arriba en el Hero, el acompañante se hace más discreto; al bajar cobra protagonismo
+      const inHero = window.scrollY < vh * 0.45;
+      compGlobeState.targetRadius = inHero ? 38 : (vw < 700 ? 44 : 58);
+      compGlobeState.radius += (compGlobeState.targetRadius - compGlobeState.radius) * 0.06;
+
+      // Cinemática sobreamortiguada con límite de velocidad para cero movimientos bruscos
+      const desiredVx = (targetX - compGlobeState.x) * 0.045;
+      const desiredVy = (targetY - compGlobeState.y) * 0.045;
+      compGlobeState.vx += (desiredVx - compGlobeState.vx) * 0.1;
+      compGlobeState.vy += (desiredVy - compGlobeState.vy) * 0.1;
+
+      const maxSpeed = 3.8;
+      const speed = Math.hypot(compGlobeState.vx, compGlobeState.vy);
+      if (speed > maxSpeed) {
+        compGlobeState.vx = (compGlobeState.vx / speed) * maxSpeed;
+        compGlobeState.vy = (compGlobeState.vy / speed) * maxSpeed;
+      }
+
+      compGlobeState.x += compGlobeState.vx;
+      compGlobeState.y += compGlobeState.vy;
+
+      // Estela orbital suave detrás del mundo acompañante
+      compGlobeState.trail.unshift({ x: compGlobeState.x, y: compGlobeState.y, r: compGlobeState.radius });
+      if (compGlobeState.trail.length > 18) compGlobeState.trail.pop();
+
+      for (let i = compGlobeState.trail.length - 1; i >= 1; i--) {
+        const pt = compGlobeState.trail[i];
+        const ratio = 1 - i / compGlobeState.trail.length;
+        compCtx.fillStyle = `rgba(46, 204, 113, ${(ratio * 0.09).toFixed(3)})`;
+        compCtx.beginPath();
+        compCtx.arc(pt.x, pt.y, pt.r * (0.35 + ratio * 0.55), 0, Math.PI * 2);
+        compCtx.fill();
+      }
+
+      // Disparar conexiones y cartelitos periódicamente en el mundo acompañante
+      compSpawnTimer += dt;
+      if (compSpawnTimer > 1.35) {
+        compSpawnTimer = 0;
+        if (compGlobeState.arcs.length < 3) {
+          spawnSaleArc(compGlobeState);
+        }
+      }
+
+      renderGlobeInstance(compCtx, compGlobeState, compGlobeState.x, compGlobeState.y, compGlobeState.radius, dt, false);
+    }
+
+    requestAnimationFrame(animateGlobes);
+  }
+
+  requestAnimationFrame(animateGlobes);
+
+  /* ------------------------------------------------------------------------
+     5. MOTOR DE ANIMACIÓN DE NÚMEROS (CONTADORES), BARRAS Y GRÁFICOS SVG
+     ------------------------------------------------------------------------ */
+  function animateNumberEl(el) {
+    const target = parseFloat(el.getAttribute('data-count'));
+    if (isNaN(target)) return;
+    const decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
+    const prefix = el.getAttribute('data-prefix') || '';
+    const suffix = el.getAttribute('data-suffix') || '';
+    const duration = 1500;
+    const startTime = performance.now();
+
+    function tick(now) {
+      const elapsed = now - startTime;
+      const p = Math.min(1, elapsed / duration);
+      // Ease out expo suave
+      const eased = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
+      const current = target * eased;
+
+      let formatted;
+      if (decimals > 0) {
+        formatted = current.toFixed(decimals);
+      } else {
+        formatted = Math.round(current).toLocaleString('en-US');
+      }
+      el.textContent = `${prefix}${formatted}${suffix}`;
+
+      if (p < 1) {
+        requestAnimationFrame(tick);
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function animateContainerMetrics(container) {
+    if (!container) return;
+
+    // 1. Contadores numéricos [data-count]
+    const counters = container.querySelectorAll('[data-count]');
+    counters.forEach(el => {
+      if (el.offsetParent !== null || container.tagName === 'SECTION') {
+        animateNumberEl(el);
+      }
+    });
+
+    // 2. Barras horizontales .bar-fill[data-w] -> de 0% a data-w%
+    const bars = container.querySelectorAll('.bar-fill[data-w]');
+    bars.forEach(bar => {
+      bar.style.transition = 'none';
+      bar.style.width = '0%';
+      void bar.offsetWidth; // Reflow para reiniciar animación
+      bar.style.transition = 'width 1.45s cubic-bezier(0.16, 1, 0.3, 1)';
+      bar.style.width = bar.getAttribute('data-w') + '%';
+    });
+
+    // 3. Columnas verticales .vcol-bar[data-h] -> de 0% a data-h%
+    const vcols = container.querySelectorAll('.vcol-bar[data-h]');
+    vcols.forEach(col => {
+      col.style.transition = 'none';
+      col.style.height = '0%';
+      void col.offsetHeight;
+      col.style.transition = 'height 1.35s cubic-bezier(0.16, 1, 0.3, 1)';
+      col.style.height = col.getAttribute('data-h') + '%';
+    });
+
+    // 4. Curvas SVG .svg-curve -> trazado progresivo
+    const curves = container.querySelectorAll('.svg-curve');
+    curves.forEach(c => {
+      c.classList.remove('drawn');
+      void c.getBoundingClientRect();
+      c.classList.add('drawn');
+    });
+  }
+
+  // Animar Hero inmediatamente al cargar
+  animateContainerMetrics(document.getElementById('hero-sec'));
+
+  // IntersectionObserver para disparar contadores, barras y gráficos cuando cada sección entra en vista
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateContainerMetrics(entry.target);
+        // Al entrar en una nueva sección, el mundo acompañante dispara una ráfaga de ventas
+        triggerSalesBurst(compGlobeState, 2);
+      }
+    });
+  }, { threshold: 0.18 });
+
+  document.querySelectorAll('[data-anim-section]').forEach(sec => {
+    sectionObserver.observe(sec);
+  });
+
+  // Botones de re-animación manual en cada sección
+  document.querySelectorAll('[data-reanim]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sel = btn.getAttribute('data-reanim');
+      const target = document.querySelector(sel);
+      if (target) {
+        animateContainerMetrics(target);
+        triggerSalesBurst(compGlobeState, 3);
+      }
+    });
+  });
+
+  // Botones globales de ráfaga de ventas y animación
+  const burstButtons = [
+    document.getElementById('hero-burst-btn'),
+    document.getElementById('nav-globe-burst'),
+    document.getElementById('globe-pulse-btn'),
+    document.getElementById('globe-hud-orb')
+  ];
+  burstButtons.forEach(btn => {
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      triggerSalesBurst(heroGlobeState, 5);
+      triggerSalesBurst(compGlobeState, 3);
+      // Re-animar las métricas visibles actuales
+      document.querySelectorAll('[data-anim-section], #hero-sec').forEach(sec => {
+        const r = sec.getBoundingClientRect();
+        if (r.top < vh && r.bottom > 0) {
+          animateContainerMetrics(sec);
+        }
+      });
+    });
+  });
+
+  /* ------------------------------------------------------------------------
+     6. PESTAÑAS DEL MÉTODO, IBERNOVA, RESERVA Y VISTA AGENTE IA
+     ------------------------------------------------------------------------ */
+  // Pestañas del método (re-anima barras y números del panel elegido)
+  const stepBtns = document.querySelectorAll('[data-step]');
+  const stepPanels = document.querySelectorAll('[data-panel]');
+  stepBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = btn.getAttribute('data-step');
+      stepBtns.forEach(b => b.setAttribute('aria-selected', String(b === btn)));
+      stepPanels.forEach(p => {
+        const match = p.getAttribute('data-panel') === idx;
+        p.hidden = !match;
+        if (match) animateContainerMetrics(p);
+      });
+    });
+  });
+
+  // Pestañas de Ibernova (re-anima contadores y barras de la tabla elegida)
+  const iberBtns = document.querySelectorAll('[data-iber]');
+  const iberPanels = document.querySelectorAll('[data-iber-panel]');
+  iberBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = btn.getAttribute('data-iber');
+      iberBtns.forEach(b => b.setAttribute('aria-selected', String(b === btn)));
+      iberPanels.forEach(p => {
+        const match = p.getAttribute('data-iber-panel') === idx;
+        p.hidden = !match;
+        if (match) animateContainerMetrics(p);
+      });
+    });
+  });
+
+  // Formulario de reserva + Consola Webhook / WebMCP
+  const bookForm = document.getElementById('book-form');
+  const consoleOut = document.getElementById('console-out');
+  const formMsg = document.getElementById('form-msg');
+  const simAgentBtn = document.getElementById('sim-agent');
+
+  function renderBookingPayload(source) {
+    if (!bookForm || !consoleOut) return;
+    const fd = new FormData(bookForm);
+    const payload = {
+      source,
+      timestamp: new Date().toISOString(),
+      lead: {
+        name: fd.get('name'),
+        email: fd.get('email'),
+        brand: fd.get('brand'),
+        monthly_revenue: fd.get('revenue'),
+        service_focus: fd.get('service'),
+        preferred_slot_et: fd.get('slot')
+      },
+      routing: {
+        endpoint: 'POST /api/booking',
+        webhook: 'n8n.mastrominds.internal/webhook/audit-call',
+        assigned_office: 'Hialeah, FL (ET)'
+      }
+    };
+    consoleOut.textContent =
+      `// ${source === 'webmcp_agent' ? 'Invocación WebMCP: book_audit_call()' : 'Envío nativo de formulario HTML'}\n` +
+      JSON.stringify(payload, null, 2) +
+      `\n\n// Respuesta 200 OK:\n` +
+      JSON.stringify({ status: 'confirmed', booking_id: 'MM-' + Math.floor(100000 + Math.random() * 900000), calendar_invite_sent: true }, null, 2);
+  }
+
+  if (bookForm) {
+    renderBookingPayload('initial_preview');
+    bookForm.addEventListener('input', () => renderBookingPayload('live_form_edit'));
+    bookForm.addEventListener('submit', e => {
+      e.preventDefault();
+      renderBookingPayload('human_form_submit');
+      if (formMsg) formMsg.textContent = '✓ Reserva simulada enviada al webhook y venta registrada en el mundo.';
+      triggerSalesBurst(compGlobeState, 3);
+    });
+  }
+  if (simAgentBtn) {
+    simAgentBtn.addEventListener('click', () => {
+      renderBookingPayload('webmcp_agent');
+      if (formMsg) formMsg.textContent = '🤖 Agente IA ejecutó book_audit_call() vía WebMCP.';
+      triggerSalesBurst(compGlobeState, 3);
+    });
+  }
+
+  // Conmutador Vista Humana / Vista Agente IA
+  const vHuman = document.getElementById('v-human');
+  const vAgent = document.getElementById('v-agent');
+  if (vHuman && vAgent) {
+    vHuman.addEventListener('click', () => {
+      document.body.classList.remove('agent');
+      vHuman.setAttribute('aria-pressed', 'true');
+      vAgent.setAttribute('aria-pressed', 'false');
+    });
+    vAgent.addEventListener('click', () => {
+      document.body.classList.add('agent');
+      vAgent.setAttribute('aria-pressed', 'true');
+      vHuman.setAttribute('aria-pressed', 'false');
+    });
+  }
+})();
+</script>
+<!-- MM-VERSION-SWITCHER-START -->
+<style>
+  .mm-ver-nav {
+    position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+    z-index: 99999; display: flex; align-items: center; gap: 4px;
+    padding: 5px 8px; border-radius: 999px;
+    background: rgba(5, 7, 14, 0.92); backdrop-filter: blur(14px);
+    border: 1px solid rgba(250, 180, 18, 0.45);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.75), 0 0 20px rgba(250, 103, 17, 0.2);
+    font-family: 'Inter', system-ui, sans-serif; font-size: 12px;
+  }
+  .mm-ver-nav a {
+    color: #94A3B8; text-decoration: none; font-weight: 600;
+    padding: 5px 11px; border-radius: 999px; transition: all 0.18s ease;
+    white-space: nowrap;
+  }
+  .mm-ver-nav a:hover { color: #FFF; background: rgba(255,255,255,0.08); }
+  .mm-ver-nav a.mm-home { color: #FAB412; font-weight: 700; border-right: 1px solid rgba(255,255,255,0.12); border-radius: 999px 0 0 999px; padding-right: 12px; }
+  .mm-ver-nav a.mm-active {
+    background: linear-gradient(135deg, #FAB412, #FA6711);
+    color: #000 !important; font-weight: 800;
+  }
+  @media (max-width: 720px) {
+    .mm-ver-nav { top: auto; bottom: 70px; font-size: 11px; padding: 4px 6px; max-width: 96vw; overflow-x: auto; }
+    .mm-ver-nav a { padding: 4px 8px; }
+  }
+</style>
+<nav class="mm-ver-nav" id="mm-ver-nav" aria-label="Selector de versiones del boceto">
+  <a href="index.html" class="mm-home">🏠 Inicio</a>
+  <a href="v0-index.html" class="">V0 · Original</a>
+  <a href="conceptos-visuales.html" class="">V1 · Conceptos</a>
+  <a href="astro-v2.html" class="">V2 · Agujero Negro</a>
+  <a href="astro-v3.html" class="">V3 · Recorrido $1</a>
+  <a href="astro-v4.html" class="mm-active">V4 · Mundo Ventas</a>
+</nav>
+<script>if(window.self!==window.top){var n=document.getElementById('mm-ver-nav');if(n)n.style.display='none';}</script>
+<!-- MM-VERSION-SWITCHER-END -->
+</body>
+</html>
